@@ -1,0 +1,11 @@
+query singleExample($name: String!) {
+	singleExample(name: $name) {
+		name
+		sex
+		description
+		attributes {
+			key
+			value
+		}
+	}
+}
