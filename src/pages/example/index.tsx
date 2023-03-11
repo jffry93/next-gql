@@ -2,21 +2,18 @@ import { getExamples } from '@/graphql/api';
 
 import { useQuery } from 'react-query';
 
-// // Using Server side rendering
-// export async function getServerSideProps() {
-// 	// fetches data and waits with it until component mounts
-// 	const examples = await getExamples();
-// 	return { props: { examples } };
-// }
-
 const Example = () => {
-	const { data, isLoading } = useQuery([''], () => getExamples());
+	const { data, isLoading } = useQuery(['examples'], () => getExamples());
 
 	isLoading && <div>Loading...</div>;
 
 	return data?.example.map((object, index) => {
 		// console.log(object);
-		return <div key={index}>Party on!!</div>;
+		return (
+			<ul key={index} className='nav-items'>
+				<li className={index !== 0 ? '' : 'text-violet-500'}>{object.name}</li>
+			</ul>
+		);
 	});
 };
 

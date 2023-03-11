@@ -1,0 +1,11 @@
+query getMovies {
+	movie {
+		id
+		title
+		genre
+		recommend
+		watched
+		rating
+		comment
+	}
+}

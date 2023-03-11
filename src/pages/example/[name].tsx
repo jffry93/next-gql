@@ -3,23 +3,23 @@ import React from 'react';
 import { useQuery } from 'react-query';
 
 interface ParamsType {
-  params: { name: string };
+	params: { name: string };
 }
 export async function getServerSideProps({ params }: ParamsType) {
-  const posts = await singleExample({ name: params.name });
-  return {
-    props: {
-      name: params.name,
-    },
-  };
+	const posts = await singleExample({ name: params.name });
+	return {
+		props: {
+			name: params.name,
+		},
+	};
 }
 
 const SingleExample: React.FunctionComponent<{
-  name: string;
+	name: string;
 }> = ({ name }) => {
-  const { data } = useQuery('singleExample', () => singleExample({ name }));
-  //   console.log(data);
-  return <div>Single Example details</div>;
+	const { data } = useQuery('singleExample', () => singleExample({ name }));
+
+	return <div>Single Example details</div>;
 };
 
 export default SingleExample;

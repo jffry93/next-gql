@@ -6,24 +6,24 @@ import examples from './example.json';
 
 @Resolver(Example)
 export class ExampleResolver {
-  //get all items
-  @Query(() => [Example])
-  example(): Example[] {
-    return examples;
-  }
-  //get single item
-  @Query(() => [Example])
-  singleExample(@Arg('name', { nullable: true }) name?: string): Example[] {
-    if (name) {
-      // filter the examples array by name if a name argument is provided
-      return examples.filter(
-        (example) => example.name.toLowerCase() === name.toLowerCase()
-      );
-    } else {
-      // return the full examples array if no name argument is provided
-      return examples;
-    }
-  }
+	//get all items
+	@Query(() => [Example])
+	example(): Example[] {
+		return examples;
+	}
+	//get single item
+	@Query(() => [Example])
+	singleExample(@Arg('name', { nullable: true }) name?: string): Example[] {
+		if (name) {
+			// filter the examples array by name if a name argument is provided
+			return examples.filter(
+				(example) => example.name.toLowerCase() === name.toLowerCase()
+			);
+		} else {
+			// return the full examples array if no name argument is provided
+			return examples;
+		}
+	}
 }
 
 // Example of resolver connecting to the database

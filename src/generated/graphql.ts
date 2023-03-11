@@ -33,6 +33,17 @@ export type ExampleAttribute = {
   value: Scalars['String'];
 };
 
+export type Movie = {
+  __typename?: 'Movie';
+  comment?: Maybe<Scalars['String']>;
+  genre: Array<Scalars['String']>;
+  id: Scalars['ID'];
+  rating: Scalars['Float'];
+  recommend: Scalars['String'];
+  title: Scalars['String'];
+  watched: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createPost: Post;
@@ -55,6 +66,7 @@ export type Query = {
   __typename?: 'Query';
   allPosts: Array<Post>;
   example: Array<Example>;
+  movie: Array<Movie>;
   singleExample: Array<Example>;
   singlePost: Array<Post>;
 };
@@ -80,6 +92,11 @@ export type SingleExampleQueryVariables = Exact<{
 
 
 export type SingleExampleQuery = { __typename?: 'Query', singleExample: Array<{ __typename?: 'Example', name: string, sex: string, description: Array<string>, attributes: Array<{ __typename?: 'ExampleAttribute', key: string, value: string }> }> };
+
+export type GetMoviesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMoviesQuery = { __typename?: 'Query', movie: Array<{ __typename?: 'Movie', id: string, title: string, genre: Array<string>, recommend: string, watched: string, rating: number, comment?: string | null }> };
 
 export type CreatePostMutationVariables = Exact<{
   title: Scalars['String'];
@@ -129,6 +146,19 @@ export const SingleExampleDocument = gql`
   }
 }
     `;
+export const GetMoviesDocument = gql`
+    query getMovies {
+  movie {
+    id
+    title
+    genre
+    recommend
+    watched
+    rating
+    comment
+  }
+}
+    `;
 export const CreatePostDocument = gql`
     mutation createPost($title: String!, $description: String!) {
   createPost(title: $title, description: $description) {
@@ -169,6 +199,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     singleExample(variables: SingleExampleQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SingleExampleQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<SingleExampleQuery>(SingleExampleDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'singleExample', 'query');
+    },
+    getMovies(variables?: GetMoviesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetMoviesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetMoviesQuery>(GetMoviesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getMovies', 'query');
     },
     createPost(variables: CreatePostMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreatePostMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreatePostMutation>(CreatePostDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createPost', 'mutation');

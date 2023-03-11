@@ -1,4 +1,8 @@
 export default function Home() {
 	// console.log(data);
-	return <div>Hello World 🌎</div>;
+	return (
+		<h1 className='flex text-3xl font-bold underline bg-customPrimary'>
+			Hello world!
+		</h1>
+	);
 }
