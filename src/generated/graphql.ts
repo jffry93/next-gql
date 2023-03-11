@@ -16,27 +16,6 @@ export type Scalars = {
   DateTime: any;
 };
 
-export type Dog = {
-  __typename?: 'Dog';
-  ageInWeeks: Scalars['Float'];
-  attributes: Array<DogAttribute>;
-  availableDate: Scalars['String'];
-  breed: Scalars['String'];
-  color: Scalars['String'];
-  description: Array<Scalars['String']>;
-  fee: Scalars['Float'];
-  image: Scalars['String'];
-  name: Scalars['ID'];
-  sex: Scalars['String'];
-  weight: Scalars['Float'];
-};
-
-export type DogAttribute = {
-  __typename?: 'DogAttribute';
-  key: Scalars['ID'];
-  value: Scalars['String'];
-};
-
 export type Example = {
   __typename?: 'Example';
   age: Scalars['Float'];
@@ -54,17 +33,30 @@ export type ExampleAttribute = {
   value: Scalars['String'];
 };
 
-export type Query = {
-  __typename?: 'Query';
-  dog?: Maybe<Dog>;
-  dogs: Array<Dog>;
-  example: Array<Example>;
-  singleExample: Array<Example>;
+export type Mutation = {
+  __typename?: 'Mutation';
+  createPost: Post;
 };
 
 
-export type QueryDogArgs = {
-  name: Scalars['String'];
+export type MutationCreatePostArgs = {
+  description: Scalars['String'];
+  title: Scalars['String'];
+};
+
+export type Post = {
+  __typename?: 'Post';
+  description: Scalars['String'];
+  id: Scalars['ID'];
+  title: Scalars['String'];
+};
+
+export type Query = {
+  __typename?: 'Query';
+  allPosts: Array<Post>;
+  example: Array<Example>;
+  singleExample: Array<Example>;
+  singlePost: Array<Post>;
 };
 
 
@@ -72,17 +64,10 @@ export type QuerySingleExampleArgs = {
   name?: InputMaybe<Scalars['String']>;
 };
 
-export type DogByNameQueryVariables = Exact<{
-  name: Scalars['String'];
-}>;
 
-
-export type DogByNameQuery = { __typename?: 'Query', dog?: { __typename?: 'Dog', name: string, sex: string, description: Array<string>, color: string, attributes: Array<{ __typename?: 'DogAttribute', key: string, value: string }> } | null };
-
-export type GetDogsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetDogsQuery = { __typename?: 'Query', dogs: Array<{ __typename?: 'Dog', name: string, breed: string, sex: string, image: string, ageInWeeks: number, weight: number, fee: number }> };
+export type QuerySinglePostArgs = {
+  id?: InputMaybe<Scalars['String']>;
+};
 
 export type GetExamplesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -96,34 +81,27 @@ export type SingleExampleQueryVariables = Exact<{
 
 export type SingleExampleQuery = { __typename?: 'Query', singleExample: Array<{ __typename?: 'Example', name: string, sex: string, description: Array<string>, attributes: Array<{ __typename?: 'ExampleAttribute', key: string, value: string }> }> };
 
+export type CreatePostMutationVariables = Exact<{
+  title: Scalars['String'];
+  description: Scalars['String'];
+}>;
 
-export const DogByNameDocument = gql`
-    query dogByName($name: String!) {
-  dog(name: $name) {
-    name
-    sex
-    description
-    color
-    attributes {
-      key
-      value
-    }
-  }
-}
-    `;
-export const GetDogsDocument = gql`
-    query getDogs {
-  dogs {
-    name
-    breed
-    sex
-    image
-    ageInWeeks
-    weight
-    fee
-  }
-}
-    `;
+
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: string, title: string, description: string } };
+
+export type GetPostsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetPostsQuery = { __typename?: 'Query', allPosts: Array<{ __typename?: 'Post', id: string, title: string, description: string }> };
+
+export type SinglePostQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type SinglePostQuery = { __typename?: 'Query', singlePost: Array<{ __typename?: 'Post', id: string, title: string, description: string }> };
+
+
 export const GetExamplesDocument = gql`
     query getExamples {
   example {
@@ -151,6 +129,33 @@ export const SingleExampleDocument = gql`
   }
 }
     `;
+export const CreatePostDocument = gql`
+    mutation createPost($title: String!, $description: String!) {
+  createPost(title: $title, description: $description) {
+    id
+    title
+    description
+  }
+}
+    `;
+export const GetPostsDocument = gql`
+    query getPosts {
+  allPosts {
+    id
+    title
+    description
+  }
+}
+    `;
+export const SinglePostDocument = gql`
+    query singlePost($id: String!) {
+  singlePost(id: $id) {
+    id
+    title
+    description
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 
@@ -159,17 +164,20 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    dogByName(variables: DogByNameQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DogByNameQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<DogByNameQuery>(DogByNameDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'dogByName', 'query');
-    },
-    getDogs(variables?: GetDogsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetDogsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetDogsQuery>(GetDogsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getDogs', 'query');
-    },
     getExamples(variables?: GetExamplesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetExamplesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetExamplesQuery>(GetExamplesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getExamples', 'query');
     },
     singleExample(variables: SingleExampleQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SingleExampleQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<SingleExampleQuery>(SingleExampleDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'singleExample', 'query');
+    },
+    createPost(variables: CreatePostMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreatePostMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreatePostMutation>(CreatePostDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createPost', 'mutation');
+    },
+    getPosts(variables?: GetPostsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetPostsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetPostsQuery>(GetPostsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getPosts', 'query');
+    },
+    singlePost(variables: SinglePostQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SinglePostQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SinglePostQuery>(SinglePostDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'singlePost', 'query');
     }
   };
 }
