@@ -33,6 +33,12 @@ export type ExampleAttribute = {
   value: Scalars['String'];
 };
 
+export type ImageAttribute = {
+  __typename?: 'ImageAttribute';
+  backdrop_path: Scalars['String'];
+  poster_path: Scalars['String'];
+};
+
 export type Movie = {
   __typename?: 'Movie';
   comment?: Maybe<Scalars['String']>;
@@ -66,6 +72,7 @@ export type Query = {
   __typename?: 'Query';
   allPosts: Array<Post>;
   example: Array<Example>;
+  getPopularMovies: Array<Tmdb>;
   movie: Array<Movie>;
   singleExample: Array<Example>;
   singlePost: Array<Post>;
@@ -80,6 +87,27 @@ export type QuerySingleExampleArgs = {
 export type QuerySinglePostArgs = {
   id?: InputMaybe<Scalars['String']>;
 };
+
+export type Tmdb = {
+  __typename?: 'TMDB';
+  id: Scalars['ID'];
+  img_data: ImageAttribute;
+  overview: Scalars['String'];
+  release_date: Scalars['String'];
+  title: Scalars['String'];
+  vote_data: VoteAttribute;
+};
+
+export type VoteAttribute = {
+  __typename?: 'VoteAttribute';
+  vote_average: Scalars['Float'];
+  vote_count: Scalars['Float'];
+};
+
+export type GetPopularMoviesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetPopularMoviesQuery = { __typename?: 'Query', getPopularMovies: Array<{ __typename?: 'TMDB', id: string, title: string, overview: string, release_date: string, img_data: { __typename?: 'ImageAttribute', backdrop_path: string, poster_path: string }, vote_data: { __typename?: 'VoteAttribute', vote_average: number, vote_count: number } }> };
 
 export type GetExamplesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -119,6 +147,24 @@ export type SinglePostQueryVariables = Exact<{
 export type SinglePostQuery = { __typename?: 'Query', singlePost: Array<{ __typename?: 'Post', id: string, title: string, description: string }> };
 
 
+export const GetPopularMoviesDocument = gql`
+    query getPopularMovies {
+  getPopularMovies {
+    id
+    title
+    overview
+    img_data {
+      backdrop_path
+      poster_path
+    }
+    vote_data {
+      vote_average
+      vote_count
+    }
+    release_date
+  }
+}
+    `;
 export const GetExamplesDocument = gql`
     query getExamples {
   example {
@@ -194,6 +240,9 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    getPopularMovies(variables?: GetPopularMoviesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetPopularMoviesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetPopularMoviesQuery>(GetPopularMoviesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getPopularMovies', 'query');
+    },
     getExamples(variables?: GetExamplesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetExamplesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetExamplesQuery>(GetExamplesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getExamples', 'query');
     },

@@ -1,0 +1,16 @@
+query getPopularMovies {
+  getPopularMovies {
+    id
+    title
+    overview
+    img_data {
+      backdrop_path
+      poster_path
+    }
+    vote_data {
+      vote_average
+      vote_count
+    }
+    release_date
+  }
+}
