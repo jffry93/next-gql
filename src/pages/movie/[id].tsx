@@ -1,27 +1,39 @@
 import { getSingleMovie } from '@/graphql/api';
+import { SingleTMDB } from '@/graphql/schema/TMDB/SingleTMDB';
+import Image from 'next/image';
 import React from 'react';
-import { useQuery } from 'react-query';
 
 interface ParamsType {
-  params: { id: string };
+	params: { id: string };
+}
+interface MovieDetailProps {
+	movie: SingleTMDB;
 }
 
 export async function getServerSideProps({ params }: ParamsType) {
-  // const movieDetail = await fetch('http://localhost:3000/api/movieTest');
-  console.log(params);
-  const movieDetail = await getSingleMovie({ movie_id: params.id });
-  console.log(movieDetail);
-  return {
-    props: { params },
-  };
+	const movieDetail = await getSingleMovie({ movie_id: params.id });
+	return {
+		props: { movie: movieDetail.getSingleMovie },
+	};
 }
 
-const MovieDetail = ({ params }: ParamsType) => {
-  // const { data } = useQuery('singleExample', () =>
-  //   getSingleMovie({ movie_id: params.id })
-  // );
-  // console.log(data);
-  return <div>MovieDetail</div>;
+const MovieDetail = ({ movie }: MovieDetailProps) => {
+	const loaderProp = ({ src }: any) => {
+		return src;
+	};
+	return (
+		<div>
+			<h1>{movie.title}</h1>
+			<h2>{movie.tagline}</h2>
+			<Image
+				src={movie?.poster_path ? movie?.poster_path : ''}
+				width={600}
+				height={600}
+				alt={movie.title}
+				loader={loaderProp}
+			/>
+		</div>
+	);
 };
 
 export default MovieDetail;

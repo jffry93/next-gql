@@ -11,14 +11,16 @@ datasource db {
 }
 
 model Movie {
-  id        String   @id @default(uuid())
-  title     String   @unique
-  img       String
-  genre     String[]
-  recommend Boolean  @default(false)
-  watched   Boolean  @default(false)
-  rating    Int      @default(0)
+  id        String  @id @default(uuid())
+  // title     String  @unique
+  tmdb_id   String  @unique
+  // img       String
+  // genre     String[]
+  watchlist Boolean @default(false)
+  recommend Boolean @default(false)
+  completed Boolean @default(false)
+  rating    Int     @default(0)
   comment   String?
 
-  @@index([title])
+  @@index([tmdb_id])
 }

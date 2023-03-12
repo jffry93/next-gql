@@ -1,0 +1,7 @@
+mutation toggleValue($title: String!, $id: String!, $value: Boolean!) {
+	toggleValue(title: $title, id: $id, value: $value) {
+		title
+		value
+		id
+	}
+}

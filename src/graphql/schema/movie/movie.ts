@@ -8,8 +8,8 @@ export class Movie {
 	@Field(() => String)
 	title!: string;
 
-	@Field(() => [String])
-	genre!: string[];
+	@Field(() => String)
+	tmdb_id!: string;
 
 	@Field(() => String)
 	recommend!: boolean;
@@ -22,4 +22,16 @@ export class Movie {
 
 	@Field(() => String, { nullable: true })
 	comment?: string | null;
+}
+
+@ObjectType()
+export class ToggleValue {
+	@Field(() => ID)
+	id!: string;
+
+	@Field(() => String)
+	title!: string;
+
+	@Field(() => String)
+	value!: boolean;
 }

@@ -1,21 +1,21 @@
 query getSingleMovie($movie_id: String!) {
-  getSingleMovie(movie_id: $movie_id) {
-    id
-    revenue
-    runtime
-    status
-    tagline
-    title
-    overview
-    backdrop_path
-    poster_path
-    vote_average
-    vote_count
-    genres {
-      id
-      name
-    }
-    release_date
-    budget
-  }
+	getSingleMovie(movie_id: $movie_id) {
+		id
+		revenue
+		runtime
+		status
+		tagline
+		title
+		overview
+		backdrop_path
+		poster_path
+		vote_average
+		vote_count
+		genres {
+			id
+			name
+		}
+		release_date
+		budget
+	}
 }

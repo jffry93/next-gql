@@ -45,26 +45,23 @@ export type ImageAttribute = {
   poster_path: Scalars['String'];
 };
 
-export type Movie = {
-  __typename?: 'Movie';
-  comment?: Maybe<Scalars['String']>;
-  genre: Array<Scalars['String']>;
-  id: Scalars['ID'];
-  rating: Scalars['Float'];
-  recommend: Scalars['String'];
-  title: Scalars['String'];
-  watched: Scalars['String'];
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   createPost: Post;
+  toggleValue: ToggleValue;
 };
 
 
 export type MutationCreatePostArgs = {
   description: Scalars['String'];
   title: Scalars['String'];
+};
+
+
+export type MutationToggleValueArgs = {
+  id: Scalars['String'];
+  title: Scalars['String'];
+  value: Scalars['Boolean'];
 };
 
 export type Post = {
@@ -80,7 +77,6 @@ export type Query = {
   example: Array<Example>;
   getPopularMovies: Array<Tmdb>;
   getSingleMovie: SingleTmdb;
-  movie: Array<Movie>;
   singleExample: Array<Example>;
   singlePost: Array<Post>;
 };
@@ -128,6 +124,13 @@ export type Tmdb = {
   vote_data: VoteAttribute;
 };
 
+export type ToggleValue = {
+  __typename?: 'ToggleValue';
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  value: Scalars['String'];
+};
+
 export type VoteAttribute = {
   __typename?: 'VoteAttribute';
   vote_average: Scalars['Float'];
@@ -158,10 +161,14 @@ export type SingleExampleQueryVariables = Exact<{
 
 export type SingleExampleQuery = { __typename?: 'Query', singleExample: Array<{ __typename?: 'Example', name: string, sex: string, description: Array<string>, attributes: Array<{ __typename?: 'ExampleAttribute', key: string, value: string }> }> };
 
-export type GetMoviesQueryVariables = Exact<{ [key: string]: never; }>;
+export type ToggleValueMutationVariables = Exact<{
+  title: Scalars['String'];
+  id: Scalars['String'];
+  value: Scalars['Boolean'];
+}>;
 
 
-export type GetMoviesQuery = { __typename?: 'Query', movie: Array<{ __typename?: 'Movie', id: string, title: string, genre: Array<string>, recommend: string, watched: string, rating: number, comment?: string | null }> };
+export type ToggleValueMutation = { __typename?: 'Mutation', toggleValue: { __typename?: 'ToggleValue', title: string, value: string, id: string } };
 
 export type CreatePostMutationVariables = Exact<{
   title: Scalars['String'];
@@ -252,16 +259,12 @@ export const SingleExampleDocument = gql`
   }
 }
     `;
-export const GetMoviesDocument = gql`
-    query getMovies {
-  movie {
-    id
+export const ToggleValueDocument = gql`
+    mutation toggleValue($title: String!, $id: String!, $value: Boolean!) {
+  toggleValue(title: $title, id: $id, value: $value) {
     title
-    genre
-    recommend
-    watched
-    rating
-    comment
+    value
+    id
   }
 }
     `;
@@ -312,8 +315,8 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     singleExample(variables: SingleExampleQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SingleExampleQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<SingleExampleQuery>(SingleExampleDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'singleExample', 'query');
     },
-    getMovies(variables?: GetMoviesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetMoviesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetMoviesQuery>(GetMoviesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getMovies', 'query');
+    toggleValue(variables: ToggleValueMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ToggleValueMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ToggleValueMutation>(ToggleValueDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'toggleValue', 'mutation');
     },
     createPost(variables: CreatePostMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreatePostMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreatePostMutation>(CreatePostDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createPost', 'mutation');

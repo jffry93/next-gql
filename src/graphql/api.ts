@@ -6,22 +6,22 @@ import { getSdk } from '@/generated/graphql';
 const gqlClient = new GraphQLClient('http://localhost:3000/api/graphql');
 
 export const {
-  getExamples,
-  singleExample,
-  getPosts,
-  singlePost,
-  createPost,
-  getMovies,
-  getPopularMovies,
-  getSingleMovie,
+	getExamples,
+	singleExample,
+	getPosts,
+	singlePost,
+	createPost,
+	getPopularMovies,
+	getSingleMovie,
+	toggleValue,
 } = getSdk(gqlClient);
 
 export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-    },
-  },
+	defaultOptions: {
+		queries: {
+			refetchOnMount: false,
+			refetchOnWindowFocus: false,
+			refetchOnReconnect: false,
+		},
+	},
 });
