@@ -10,15 +10,6 @@ export class ImageAttribute {
 }
 
 @ObjectType()
-export class VoteAttribute {
-	@Field(() => Number)
-	vote_average!: number;
-
-	@Field(() => Number)
-	vote_count!: number;
-}
-
-@ObjectType()
 export class GenreAttribute {
 	@Field(() => ID)
 	id!: number;
@@ -43,9 +34,6 @@ export class SingleTMDB {
 
 	@Field(() => String, { nullable: true })
 	poster_path!: string | null;
-
-	// @Field(() => VoteAttribute)
-	// vote_data!: VoteAttribute;
 
 	@Field(() => Number)
 	vote_average!: number;

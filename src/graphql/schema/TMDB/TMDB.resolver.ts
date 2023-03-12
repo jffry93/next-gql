@@ -1,5 +1,7 @@
 //this where you would get data from db. Example below
+import { mergeArrays } from '@/utils/mergeArray';
 import { Resolver, Query, Arg } from 'type-graphql';
+import { prisma } from '../../../../prisma/db';
 import { SingleTMDB } from './SingleTMDB';
 import { TMDB } from './TMDB';
 
@@ -25,16 +27,27 @@ interface SingleTMDBRes {
 	vote_count: number;
 }
 
+interface IMOTypes {
+	watchlist: boolean;
+	recommend: boolean;
+	completed: boolean;
+	rating: number;
+	comment?: string | null;
+}
+
 @Resolver(TMDB)
 export class TMDBResolver {
 	//get all items
 	@Query(() => [TMDB])
-	async getPopularMovies(): Promise<TMDB[]> {
+	async getPopularMovies(): Promise<Array<TMDB & IMOTypes>> {
 		const imagePath = 'https://image.tmdb.org/t/p/original/';
 		const data = await fetch(
 			`https://api.themoviedb.org/3/movie/popular?api_key=${'d94def994ec173326a17294a58df1a20'}&language=en-US&page=1`
 		);
 		const response = await data.json();
+
+		const imo = await prisma.movie.findMany();
+
 		const updateResponse = response.results.map((element: any) => {
 			const {
 				id,
@@ -46,8 +59,8 @@ export class TMDBResolver {
 				vote_count,
 				release_date,
 			} = element;
-			return {
-				id,
+			const tmdbObj = {
+				id: id + '',
 				title,
 				overview,
 				img_data: {
@@ -60,9 +73,28 @@ export class TMDBResolver {
 				},
 				release_date,
 			};
+			return tmdbObj;
 		});
 
-		return updateResponse;
+		const defaultObj = {
+			watchlist: false,
+			recommend: false,
+			completed: false,
+			rating: 0,
+			comment: null,
+		};
+		// console.log(updateResponse);
+		// const check = updateResponse.forEach((element: any) => {
+		// 	console.log(typeof element.id);
+		// });
+		const moviesWithIMO: Array<TMDB & IMOTypes> = mergeArrays(
+			imo as Array<TMDB & IMOTypes>,
+			updateResponse,
+			'id',
+			defaultObj
+		);
+
+		return moviesWithIMO;
 	}
 	@Query(() => SingleTMDB)
 	async getSingleMovie(

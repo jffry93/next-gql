@@ -10,6 +10,8 @@ interface MovieProps {
 }
 
 const MovieItem = ({ movie }: MovieProps) => {
+	console.log(movie);
+
 	const router = useRouter();
 	//needed to use image with fetched url
 	const loaderProp = ({ src }: any) => {
@@ -17,7 +19,11 @@ const MovieItem = ({ movie }: MovieProps) => {
 	};
 	return (
 		<div>
-			<ToggleButton id={movie.id} title={'watchlist'} />
+			<ToggleButton
+				id={movie.id}
+				title={'watchlist'}
+				initialValue={movie.watchlist}
+			/>
 			<h3>{movie.title}</h3>
 			<Rating
 				count={movie.vote_data.vote_count}

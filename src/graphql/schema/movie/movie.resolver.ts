@@ -28,7 +28,7 @@ export class MovieResolver {
 		const response = await prisma.movie.upsert({
 			create: {
 				// ... data to create a Movie
-				tmdb_id: id,
+				id,
 				[title]: !value,
 			},
 			update: {
@@ -36,13 +36,10 @@ export class MovieResolver {
 				[title]: !value,
 			},
 			where: {
-				tmdb_id: id,
+				id,
 				// ... the filter for the Movie we want to update
 			},
 		});
-		console.log(response);
-		// const transformTitle = title.toLowerCase();
-
 		const newPost = {
 			id,
 			title,
@@ -52,14 +49,3 @@ export class MovieResolver {
 		return newPost;
 	}
 }
-
-// Example of resolver connecting to the database
-
-// export class DogsResolver {
-// 	@Query(() => [Dog])
-// 	async dogs(): Promise<Dog[]> {
-// 		// const response = await prisma...
-
-// 		return dogs;
-// 	}
-// }
