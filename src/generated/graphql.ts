@@ -33,6 +33,12 @@ export type ExampleAttribute = {
   value: Scalars['String'];
 };
 
+export type GenreAttribute = {
+  __typename?: 'GenreAttribute';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+};
+
 export type ImageAttribute = {
   __typename?: 'ImageAttribute';
   backdrop_path: Scalars['String'];
@@ -73,9 +79,15 @@ export type Query = {
   allPosts: Array<Post>;
   example: Array<Example>;
   getPopularMovies: Array<Tmdb>;
+  getSingleMovie: SingleTmdb;
   movie: Array<Movie>;
   singleExample: Array<Example>;
   singlePost: Array<Post>;
+};
+
+
+export type QueryGetSingleMovieArgs = {
+  movie_id?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -86,6 +98,24 @@ export type QuerySingleExampleArgs = {
 
 export type QuerySinglePostArgs = {
   id?: InputMaybe<Scalars['String']>;
+};
+
+export type SingleTmdb = {
+  __typename?: 'SingleTMDB';
+  backdrop_path?: Maybe<Scalars['String']>;
+  budget: Scalars['Float'];
+  genres: Array<GenreAttribute>;
+  id: Scalars['ID'];
+  overview?: Maybe<Scalars['String']>;
+  poster_path?: Maybe<Scalars['String']>;
+  release_date: Scalars['String'];
+  revenue: Scalars['Float'];
+  runtime?: Maybe<Scalars['Float']>;
+  status: Scalars['String'];
+  tagline?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
+  vote_average: Scalars['Float'];
+  vote_count: Scalars['Float'];
 };
 
 export type Tmdb = {
@@ -108,6 +138,13 @@ export type GetPopularMoviesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetPopularMoviesQuery = { __typename?: 'Query', getPopularMovies: Array<{ __typename?: 'TMDB', id: string, title: string, overview: string, release_date: string, img_data: { __typename?: 'ImageAttribute', backdrop_path: string, poster_path: string }, vote_data: { __typename?: 'VoteAttribute', vote_average: number, vote_count: number } }> };
+
+export type GetSingleMovieQueryVariables = Exact<{
+  movie_id: Scalars['String'];
+}>;
+
+
+export type GetSingleMovieQuery = { __typename?: 'Query', getSingleMovie: { __typename?: 'SingleTMDB', id: string, revenue: number, runtime?: number | null, status: string, tagline?: string | null, title: string, overview?: string | null, backdrop_path?: string | null, poster_path?: string | null, vote_average: number, vote_count: number, release_date: string, budget: number, genres: Array<{ __typename?: 'GenreAttribute', id: string, name: string }> } };
 
 export type GetExamplesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -162,6 +199,29 @@ export const GetPopularMoviesDocument = gql`
       vote_count
     }
     release_date
+  }
+}
+    `;
+export const GetSingleMovieDocument = gql`
+    query getSingleMovie($movie_id: String!) {
+  getSingleMovie(movie_id: $movie_id) {
+    id
+    revenue
+    runtime
+    status
+    tagline
+    title
+    overview
+    backdrop_path
+    poster_path
+    vote_average
+    vote_count
+    genres {
+      id
+      name
+    }
+    release_date
+    budget
   }
 }
     `;
@@ -242,6 +302,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     getPopularMovies(variables?: GetPopularMoviesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetPopularMoviesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetPopularMoviesQuery>(GetPopularMoviesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getPopularMovies', 'query');
+    },
+    getSingleMovie(variables: GetSingleMovieQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetSingleMovieQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetSingleMovieQuery>(GetSingleMovieDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getSingleMovie', 'query');
     },
     getExamples(variables?: GetExamplesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetExamplesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetExamplesQuery>(GetExamplesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getExamples', 'query');

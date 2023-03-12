@@ -13,6 +13,7 @@ export const {
   createPost,
   getMovies,
   getPopularMovies,
+  getSingleMovie,
 } = getSdk(gqlClient);
 
 export const queryClient = new QueryClient({

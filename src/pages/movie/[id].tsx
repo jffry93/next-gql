@@ -9,8 +9,8 @@ interface ParamsType {
 export async function getServerSideProps({ params }: ParamsType) {
   // const movieDetail = await fetch('http://localhost:3000/api/movieTest');
   console.log(params);
-  const popularMovies = await getSingleMovie({ movie_id: params.id });
-  //   console.log(movieDetail);
+  const movieDetail = await getSingleMovie({ movie_id: params.id });
+  console.log(movieDetail);
   return {
     props: { params },
   };
