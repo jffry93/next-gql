@@ -3,15 +3,13 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React from 'react';
 import Rating from './Rating';
-import ToggleButton from './ToggleButton';
+import ToggleContainer from './toggle';
 
 interface MovieProps {
 	movie: TMDB;
 }
 
 const MovieItem = ({ movie }: MovieProps) => {
-	console.log(movie);
-
 	const router = useRouter();
 	//needed to use image with fetched url
 	const loaderProp = ({ src }: any) => {
@@ -19,21 +17,8 @@ const MovieItem = ({ movie }: MovieProps) => {
 	};
 	return (
 		<div>
-			<ToggleButton
-				id={movie.id}
-				title={'watchlist'}
-				initialValue={movie.watchlist}
-			/>
-			<ToggleButton
-				id={movie.id}
-				title={'completed'}
-				initialValue={movie.completed}
-			/>
-			<ToggleButton
-				id={movie.id}
-				title={'recommend'}
-				initialValue={movie.recommend}
-			/>
+			<ToggleContainer movie={movie} />
+
 			<h3>{movie.title}</h3>
 			<Rating
 				count={movie.vote_data.vote_count}

@@ -1,9 +1,10 @@
 //this where you would get data from db. Example below
-import { mergeArrays } from '@/utils/mergeArray';
+import { mergeObjectWithArray } from '@/utils/mergeObjectWithArray';
+import { mergeTwoArrays } from '@/utils/mergeTwoArrays';
 import { Resolver, Query, Arg } from 'type-graphql';
 import { prisma } from '../../../../prisma/db';
 import { SingleTMDB } from './SingleTMDB';
-import { TMDB } from './TMDB';
+import { IMOAttribute, TMDB } from './TMDB';
 
 interface SingleTMDBRes {
 	backdrop_path: string | null;
@@ -28,26 +29,37 @@ interface SingleTMDBRes {
 }
 
 interface IMOTypes {
+	id?: string;
 	watchlist: boolean;
 	recommend: boolean;
 	completed: boolean;
 	rating: number;
-	comment?: string | null;
+	comment: string | null;
 }
+
+const defaultObj: IMOTypes = {
+	watchlist: false,
+	recommend: false,
+	completed: false,
+	rating: 0,
+	comment: null,
+};
 
 @Resolver(TMDB)
 export class TMDBResolver {
-	//get all items
+	// Get All Popular Movies
+	// Get users hot take 🌶️🌶️🌶️ and combine the two
 	@Query(() => [TMDB])
 	async getPopularMovies(): Promise<Array<TMDB & IMOTypes>> {
 		const imagePath = 'https://image.tmdb.org/t/p/original/';
+		// Get movies from TMDB
 		const data = await fetch(
 			`https://api.themoviedb.org/3/movie/popular?api_key=${'d94def994ec173326a17294a58df1a20'}&language=en-US&page=1`
 		);
 		const response = await data.json();
-
+		//  Get Opinion from Prisma
 		const imo = await prisma.movie.findMany();
-
+		// Update format to send to frontend
 		const updateResponse = response.results.map((element: any) => {
 			const {
 				id,
@@ -59,6 +71,7 @@ export class TMDBResolver {
 				vote_count,
 				release_date,
 			} = element;
+
 			const tmdbObj = {
 				id: id + '',
 				title,
@@ -75,40 +88,30 @@ export class TMDBResolver {
 			};
 			return tmdbObj;
 		});
-
-		const defaultObj = {
-			watchlist: false,
-			recommend: false,
-			completed: false,
-			rating: 0,
-			comment: null,
-		};
-		// console.log(updateResponse);
-		// const check = updateResponse.forEach((element: any) => {
-		// 	console.log(typeof element.id);
-		// });
-		const moviesWithIMO: Array<TMDB & IMOTypes> = mergeArrays(
+		// Add your Opinion
+		const moviesWithIMO: Array<TMDB & IMOTypes> = mergeTwoArrays(
 			imo as Array<TMDB & IMOTypes>,
 			updateResponse,
 			'id',
 			defaultObj
 		);
-
+		// Send spice to front 🌶️🌶️🌶️
 		return moviesWithIMO;
 	}
 	@Query(() => SingleTMDB)
 	async getSingleMovie(
 		@Arg('movie_id', { nullable: true }) movie_id?: string
-	): Promise<SingleTMDB> {
+	): Promise<SingleTMDB & IMOTypes> {
 		const imagePath = 'https://image.tmdb.org/t/p/original';
 		const apiKey = 'd94def994ec173326a17294a58df1a20';
 		const data = await fetch(
 			`https://api.themoviedb.org/3/movie/${movie_id}?api_key=${apiKey}&language=en-US`
 		);
 		const movie: SingleTMDBRes = await data.json();
-
 		const { backdrop_path, poster_path } = movie;
-		return {
+
+		const imo: IMOTypes[] = await prisma.movie.findMany();
+		const testObj = {
 			id: movie.id + '',
 			title: movie.title,
 			overview: movie.overview,
@@ -124,5 +127,9 @@ export class TMDBResolver {
 			status: movie.status,
 			tagline: movie.tagline,
 		};
+
+		const movieWithIMO = mergeObjectWithArray(testObj, imo, 'id', defaultObj);
+
+		return movieWithIMO;
 	}
 }

@@ -100,10 +100,14 @@ export type SingleTmdb = {
   __typename?: 'SingleTMDB';
   backdrop_path?: Maybe<Scalars['String']>;
   budget: Scalars['Float'];
+  comment?: Maybe<Scalars['String']>;
+  completed: Scalars['Boolean'];
   genres: Array<GenreAttribute>;
   id: Scalars['ID'];
   overview?: Maybe<Scalars['String']>;
   poster_path?: Maybe<Scalars['String']>;
+  rating: Scalars['Float'];
+  recommend: Scalars['Boolean'];
   release_date: Scalars['String'];
   revenue: Scalars['Float'];
   runtime?: Maybe<Scalars['Float']>;
@@ -112,6 +116,7 @@ export type SingleTmdb = {
   title: Scalars['String'];
   vote_average: Scalars['Float'];
   vote_count: Scalars['Float'];
+  watchlist: Scalars['Boolean'];
 };
 
 export type Tmdb = {
@@ -152,7 +157,7 @@ export type GetSingleMovieQueryVariables = Exact<{
 }>;
 
 
-export type GetSingleMovieQuery = { __typename?: 'Query', getSingleMovie: { __typename?: 'SingleTMDB', id: string, revenue: number, runtime?: number | null, status: string, tagline?: string | null, title: string, overview?: string | null, backdrop_path?: string | null, poster_path?: string | null, vote_average: number, vote_count: number, release_date: string, budget: number, genres: Array<{ __typename?: 'GenreAttribute', id: string, name: string }> } };
+export type GetSingleMovieQuery = { __typename?: 'Query', getSingleMovie: { __typename?: 'SingleTMDB', id: string, revenue: number, runtime?: number | null, status: string, tagline?: string | null, title: string, overview?: string | null, backdrop_path?: string | null, poster_path?: string | null, vote_average: number, vote_count: number, release_date: string, budget: number, watchlist: boolean, recommend: boolean, completed: boolean, rating: number, comment?: string | null, genres: Array<{ __typename?: 'GenreAttribute', id: string, name: string }> } };
 
 export type GetExamplesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -237,6 +242,11 @@ export const GetSingleMovieDocument = gql`
     }
     release_date
     budget
+    watchlist
+    recommend
+    completed
+    rating
+    comment
   }
 }
     `;

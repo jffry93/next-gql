@@ -17,5 +17,10 @@ query getSingleMovie($movie_id: String!) {
 		}
 		release_date
 		budget
+		watchlist
+		recommend
+		completed
+		rating
+		comment
 	}
 }

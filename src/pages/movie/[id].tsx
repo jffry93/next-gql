@@ -1,3 +1,4 @@
+import ToggleContainer from '@/components/toggle';
 import { getSingleMovie } from '@/graphql/api';
 import { SingleTMDB } from '@/graphql/schema/TMDB/SingleTMDB';
 import Image from 'next/image';
@@ -18,11 +19,13 @@ export async function getServerSideProps({ params }: ParamsType) {
 }
 
 const MovieDetail = ({ movie }: MovieDetailProps) => {
+	// console.log(movie);
 	const loaderProp = ({ src }: any) => {
 		return src;
 	};
 	return (
 		<div>
+			<ToggleContainer movie={movie} />
 			<h1>{movie.title}</h1>
 			<h2>{movie.tagline}</h2>
 			<Image

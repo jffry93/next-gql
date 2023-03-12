@@ -61,4 +61,19 @@ export class SingleTMDB {
 
 	@Field(() => String, { nullable: true })
 	tagline!: string | null;
+
+	@Field(() => Boolean)
+	watchlist!: boolean;
+
+	@Field(() => Boolean)
+	recommend!: boolean;
+
+	@Field(() => Boolean)
+	completed!: boolean;
+
+	@Field(() => Number)
+	rating!: number;
+
+	@Field(() => String, { nullable: true })
+	comment!: string | null;
 }

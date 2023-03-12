@@ -1,6 +1,6 @@
 //compare two arrays and merge if match or merge default object
 
-export function mergeArrays<T extends Record<string, any>>(
+export function mergeTwoArrays<T extends Record<string, any>>(
 	arr1: T[],
 	arr2: T[],
 	idKey: keyof T,

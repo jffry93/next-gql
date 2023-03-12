@@ -53,3 +53,21 @@ export class TMDB {
 	@Field(() => String)
 	comment!: string;
 }
+
+@ObjectType()
+export class IMOAttribute {
+	@Field(() => Boolean)
+	watchlist!: boolean;
+
+	@Field(() => Boolean)
+	recommend!: boolean;
+
+	@Field(() => Boolean)
+	completed!: boolean;
+
+	@Field(() => Number)
+	rating!: number;
+
+	@Field(() => String)
+	comment!: string;
+}
