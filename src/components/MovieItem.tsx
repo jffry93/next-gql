@@ -24,6 +24,16 @@ const MovieItem = ({ movie }: MovieProps) => {
 				title={'watchlist'}
 				initialValue={movie.watchlist}
 			/>
+			<ToggleButton
+				id={movie.id}
+				title={'completed'}
+				initialValue={movie.completed}
+			/>
+			<ToggleButton
+				id={movie.id}
+				title={'recommend'}
+				initialValue={movie.recommend}
+			/>
 			<h3>{movie.title}</h3>
 			<Rating
 				count={movie.vote_data.vote_count}

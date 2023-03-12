@@ -13,5 +13,7 @@ query getPopularMovies {
 		}
 		release_date
 		watchlist
+		recommend
+		completed
 	}
 }

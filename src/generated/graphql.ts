@@ -145,7 +145,7 @@ export type VoteAttribute = {
 export type GetPopularMoviesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetPopularMoviesQuery = { __typename?: 'Query', getPopularMovies: Array<{ __typename?: 'TMDB', id: string, title: string, overview: string, release_date: string, watchlist: boolean, img_data: { __typename?: 'ImageAttribute', backdrop_path: string, poster_path: string }, vote_data: { __typename?: 'VoteAttribute', vote_average: number, vote_count: number } }> };
+export type GetPopularMoviesQuery = { __typename?: 'Query', getPopularMovies: Array<{ __typename?: 'TMDB', id: string, title: string, overview: string, release_date: string, watchlist: boolean, recommend: boolean, completed: boolean, img_data: { __typename?: 'ImageAttribute', backdrop_path: string, poster_path: string }, vote_data: { __typename?: 'VoteAttribute', vote_average: number, vote_count: number } }> };
 
 export type GetSingleMovieQueryVariables = Exact<{
   movie_id: Scalars['String'];
@@ -212,6 +212,8 @@ export const GetPopularMoviesDocument = gql`
     }
     release_date
     watchlist
+    recommend
+    completed
   }
 }
     `;
