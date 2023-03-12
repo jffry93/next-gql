@@ -24,6 +24,7 @@ export default function Home({ popularMovies }: HomeProps) {
       <h1 className='flex text-3xl font-bold'>🍿 Popular Movies 🎥</h1>
       <div>
         {popularMovies.map((movie) => {
+          console.log(movie.id);
           return <MovieItem key={movie.id} movie={movie} />;
         })}
       </div>
