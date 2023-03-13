@@ -77,6 +77,7 @@ export type Query = {
   example: Array<Example>;
   getPopularMovies: Array<Tmdb>;
   getSingleMovie: SingleTmdb;
+  searchMovies: Array<SearchMovieTmdb>;
   singleExample: Array<Example>;
   singlePost: Array<Post>;
 };
@@ -87,6 +88,11 @@ export type QueryGetSingleMovieArgs = {
 };
 
 
+export type QuerySearchMoviesArgs = {
+  input: Scalars['String'];
+};
+
+
 export type QuerySingleExampleArgs = {
   name?: InputMaybe<Scalars['String']>;
 };
@@ -94,6 +100,15 @@ export type QuerySingleExampleArgs = {
 
 export type QuerySinglePostArgs = {
   id?: InputMaybe<Scalars['String']>;
+};
+
+export type SearchMovieTmdb = {
+  __typename?: 'SearchMovieTMDB';
+  completed: Scalars['Boolean'];
+  id: Scalars['ID'];
+  recommend: Scalars['Boolean'];
+  title?: Maybe<Scalars['String']>;
+  watchlist: Scalars['Boolean'];
 };
 
 export type SingleTmdb = {
@@ -151,6 +166,13 @@ export type GetPopularMoviesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetPopularMoviesQuery = { __typename?: 'Query', getPopularMovies: Array<{ __typename?: 'TMDB', id: string, title: string, overview: string, release_date: string, watchlist: boolean, recommend: boolean, completed: boolean, img_data: { __typename?: 'ImageAttribute', backdrop_path: string, poster_path: string }, vote_data: { __typename?: 'VoteAttribute', vote_average: number, vote_count: number } }> };
+
+export type SearchMoviesQueryVariables = Exact<{
+  input: Scalars['String'];
+}>;
+
+
+export type SearchMoviesQuery = { __typename?: 'Query', searchMovies: Array<{ __typename?: 'SearchMovieTMDB', id: string, title?: string | null, watchlist: boolean, recommend: boolean, completed: boolean }> };
 
 export type GetSingleMovieQueryVariables = Exact<{
   movie_id: Scalars['String'];
@@ -216,6 +238,17 @@ export const GetPopularMoviesDocument = gql`
       vote_count
     }
     release_date
+    watchlist
+    recommend
+    completed
+  }
+}
+    `;
+export const SearchMoviesDocument = gql`
+    query searchMovies($input: String!) {
+  searchMovies(input: $input) {
+    id
+    title
     watchlist
     recommend
     completed
@@ -323,6 +356,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     getPopularMovies(variables?: GetPopularMoviesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetPopularMoviesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetPopularMoviesQuery>(GetPopularMoviesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getPopularMovies', 'query');
+    },
+    searchMovies(variables: SearchMoviesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SearchMoviesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SearchMoviesQuery>(SearchMoviesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'searchMovies', 'query');
     },
     getSingleMovie(variables: GetSingleMovieQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetSingleMovieQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetSingleMovieQuery>(GetSingleMovieDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getSingleMovie', 'query');

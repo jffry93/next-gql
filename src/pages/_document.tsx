@@ -7,10 +7,8 @@ export default function Document() {
     <Html lang='en'>
       <Head />
       <body className={`p-20 debug-screens ${poppins} font-poppins`}>
-        <Layout>
-          <Main />
-          <NextScript />
-        </Layout>
+        <Main />
+        <NextScript />
       </body>
     </Html>
   );
