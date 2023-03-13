@@ -1,4 +1,3 @@
-//this where you would get data from db. Example below
 import { mergeObjectWithArray } from '@/utils/mergeObjectWithArray';
 import { mergeTwoArrays } from '@/utils/mergeTwoArrays';
 import { Resolver, Query, Arg } from 'type-graphql';
@@ -17,7 +16,7 @@ interface SingleTMDBRes {
 			name: string;
 		}
 	];
-	id: number;
+	id: number | string;
 	overview: string | null;
 	poster_path: string | null;
 	release_date: string;
@@ -30,16 +29,7 @@ interface SingleTMDBRes {
 	vote_count: number;
 }
 
-interface IMOTypes {
-	id?: string;
-	watchlist: boolean;
-	recommend: boolean;
-	completed: boolean;
-	rating: number;
-	comment: string | null;
-}
-
-const defaultObj: IMOTypes = {
+const defaultObj = {
 	watchlist: false,
 	recommend: false,
 	completed: false,
@@ -98,22 +88,21 @@ export class TMDBResolver {
 	@Query(() => SingleTMDB)
 	async getSingleMovie(
 		@Arg('movie_id', { nullable: true }) movie_id?: string
-	): Promise<SingleTMDB & IMOTypes> {
+	): Promise<SingleTMDB & Movie> {
 		const imagePath = 'https://image.tmdb.org/t/p/original';
 		const apiKey = process.env.MOVIE_DB_KEY;
 		const data = await fetch(
 			`https://api.themoviedb.org/3/movie/${movie_id}?api_key=${apiKey}&language=en-US`
 		);
 		const movie: SingleTMDBRes = await data.json();
-		const { backdrop_path, poster_path } = movie;
 
 		const imo = await prisma.movie.findMany();
-
+		// Add images url to Object
+		movie.id = movie.id + '';
+		movie.backdrop_path = imagePath + movie.backdrop_path;
+		movie.poster_path = imagePath + movie.poster_path;
 		// merge object with array and return types
 		const movieWithIMO = mergeObjectWithArray(movie, imo, 'id', defaultObj);
-		// Add images url to Object
-		movieWithIMO.backdrop_path = imagePath + backdrop_path;
-		movieWithIMO.poster_path = imagePath + poster_path;
 		//return superObject
 		return movieWithIMO;
 	}

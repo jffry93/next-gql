@@ -1,9 +1,3 @@
-// IMPORTANT NOTE ABOUT FUNCTION
-// Compares object to object in array and combines if the keyId matches. If the keyId doesn't match it ill create a defaultValue
-// Returns the length of the 2nd array
-// array much be two objects
-// returns types from both objects
-
 export function mergeObjectWithArray<
 	T extends Record<string, any>,
 	U extends Record<string, any>
