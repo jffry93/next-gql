@@ -16,6 +16,12 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type Comment = {
+  __typename?: 'Comment';
+  comment: Scalars['String'];
+  id: Scalars['String'];
+};
+
 export type Example = {
   __typename?: 'Example';
   age: Scalars['Float'];
@@ -47,8 +53,15 @@ export type ImageAttribute = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createComment: Comment;
   createPost: Post;
   toggleValue: ToggleValue;
+};
+
+
+export type MutationCreateCommentArgs = {
+  comment: Scalars['String'];
+  id: Scalars['String'];
 };
 
 
@@ -193,6 +206,14 @@ export type SingleExampleQueryVariables = Exact<{
 
 export type SingleExampleQuery = { __typename?: 'Query', singleExample: Array<{ __typename?: 'Example', name: string, sex: string, description: Array<string>, attributes: Array<{ __typename?: 'ExampleAttribute', key: string, value: string }> }> };
 
+export type CreateCommentMutationVariables = Exact<{
+  id: Scalars['String'];
+  comment: Scalars['String'];
+}>;
+
+
+export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { __typename?: 'Comment', id: string, comment: string } };
+
 export type ToggleValueMutationVariables = Exact<{
   title: Scalars['String'];
   id: Scalars['String'];
@@ -310,6 +331,14 @@ export const SingleExampleDocument = gql`
   }
 }
     `;
+export const CreateCommentDocument = gql`
+    mutation createComment($id: String!, $comment: String!) {
+  createComment(id: $id, comment: $comment) {
+    id
+    comment
+  }
+}
+    `;
 export const ToggleValueDocument = gql`
     mutation toggleValue($title: String!, $id: String!, $value: Boolean!) {
   toggleValue(title: $title, id: $id, value: $value) {
@@ -368,6 +397,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     singleExample(variables: SingleExampleQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SingleExampleQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<SingleExampleQuery>(SingleExampleDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'singleExample', 'query');
+    },
+    createComment(variables: CreateCommentMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateCommentMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateCommentMutation>(CreateCommentDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createComment', 'mutation');
     },
     toggleValue(variables: ToggleValueMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ToggleValueMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<ToggleValueMutation>(ToggleValueDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'toggleValue', 'mutation');

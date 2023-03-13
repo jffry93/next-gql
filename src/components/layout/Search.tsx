@@ -12,8 +12,6 @@ const Search = () => {
 		throttle(
 			async (value: string) => {
 				const data = await searchMovies({ input: value });
-				console.log(`Input value: ${value}`);
-				console.log('party on 🎉', data.searchMovies);
 				setDropdown(data.searchMovies);
 			},
 			250,

@@ -148,7 +148,7 @@ export class TMDBResolver {
 
 		const imo = await prisma.movie.findMany();
 		const superArray = mergeTwoArrays(imo, results, 'id', defaultObj);
-		const response = superArray.map((obj: any) => {
+		const response: SearchMovieTMDB[] = superArray.map((obj: any) => {
 			console.log(obj.title);
 			return {
 				completed: obj.completed,

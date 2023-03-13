@@ -1,6 +1,6 @@
 import { toggleValue } from '@/graphql/api';
 import { debounce } from 'lodash';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 
 interface ToggleButtonProps {
@@ -14,7 +14,9 @@ const ToggleButton = ({
 	title,
 	initialValue = false,
 }: ToggleButtonProps) => {
+	console.log(title, initialValue);
 	const [value, setValue] = useState(initialValue);
+
 	const handleClick = debounce(() => {
 		// console.log('click toggle button');
 		mutate({ id, title, value });
@@ -29,7 +31,9 @@ const ToggleButton = ({
 			console.error('Failed to create post:', error);
 		},
 	});
-
+	useEffect(() => {
+		setValue(initialValue);
+	}, [initialValue]);
 	return (
 		<button
 			className={!value ? `text-cyan-500` : `text-purple-700`}

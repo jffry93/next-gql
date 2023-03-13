@@ -1,9 +1,9 @@
 query searchMovies($input: String!) {
-  searchMovies(input: $input) {
-    id
-    title
-    watchlist
-    recommend
-    completed
-  }
+	searchMovies(input: $input) {
+		id
+		title
+		watchlist
+		recommend
+		completed
+	}
 }

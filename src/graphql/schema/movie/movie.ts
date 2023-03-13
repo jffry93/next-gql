@@ -35,3 +35,12 @@ export class ToggleValue {
 	@Field(() => String)
 	value!: boolean;
 }
+
+@ObjectType()
+export class Comment {
+	@Field(() => String)
+	id!: string;
+
+	@Field(() => String)
+	comment!: string;
+}
