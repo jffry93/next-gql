@@ -7,8 +7,7 @@ export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse<any> //infer type from prisma
 ) {
-	const movie_id = '550';
-	const apiKey = 'd94def994ec173326a17294a58df1a20';
+	const apiKey = process.env.MOVIE_DB_KEY;
 	const data = await fetch(
 		`https://api.themoviedb.org/3/search/company?api_key=${apiKey}&query=pokemon&page=1`
 	);
