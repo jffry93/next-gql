@@ -23,7 +23,6 @@ export class MovieResolver {
 		value: boolean;
 		id: string;
 	}> {
-		console.log('🌎🌎🌎🌎🌎🌎🌎', id, title, value);
 		// takes inputs from formData
 		await prisma.movie.upsert({
 			create: {

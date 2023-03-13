@@ -33,8 +33,6 @@ const Comments = ({ movie }: CommentsProps) => {
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		console.log('...mutate data?', formData.comment);
-
 		mutate(formData);
 	};
 

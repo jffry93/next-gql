@@ -137,19 +137,16 @@ export class TMDBResolver {
 	async searchMovies(
 		@Arg('input') input: string
 	): Promise<Array<SearchMovieTMDB>> {
-		console.log(input);
 		const imagePath = 'https://image.tmdb.org/t/p/original';
 		const apiKey = process.env.MOVIE_DB_KEY;
 		const data = await fetch(
 			`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=${input}&page=1&include_adult=false`
 		);
 		const { results } = await data.json();
-		// console.log(results);
 
 		const imo = await prisma.movie.findMany();
 		const superArray = mergeTwoArrays(imo, results, 'id', defaultObj);
 		const response: SearchMovieTMDB[] = superArray.map((obj: any) => {
-			console.log(obj.title);
 			return {
 				completed: obj.completed,
 				id: obj.id,

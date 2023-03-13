@@ -11,7 +11,6 @@ interface ToggleContainerProps {
 }
 
 const ToggleContainer = ({ movie }: ToggleContainerProps) => {
-	console.log(movie);
 	return (
 		<div>
 			<ToggleButton

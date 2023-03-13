@@ -14,7 +14,6 @@ const ToggleButton = ({
 	title,
 	initialValue = false,
 }: ToggleButtonProps) => {
-	console.log(title, initialValue);
 	const [value, setValue] = useState(initialValue);
 
 	const handleClick = debounce(() => {

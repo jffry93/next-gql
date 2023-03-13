@@ -1,7 +1,0 @@
-query singlePost($id: String!) {
-  singlePost(id: $id) {
-    id
-    title
-    description
-  }
-}
