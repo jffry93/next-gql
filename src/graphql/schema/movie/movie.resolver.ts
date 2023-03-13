@@ -5,14 +5,7 @@ import { Comment, Movie, ToggleValue } from './movie';
 
 @Resolver(Movie)
 export class MovieResolver {
-	//get all items
-	// @Query(() => [Movie])
-	// async movie(): Promise<Movie[]> {
-	// 	const response = await prisma.movie.findMany();
-	// 	console.log(response);
-	// 	return response;
-	// }
-	// create a new post
+	// Toggle Boolean values in Movie Table
 	@Mutation(() => ToggleValue)
 	async toggleValue(
 		@Arg('title') title: string,
@@ -23,7 +16,7 @@ export class MovieResolver {
 		value: boolean;
 		id: string;
 	}> {
-		// takes inputs from formData
+		// will create or update record in table
 		await prisma.movie.upsert({
 			create: {
 				// ... data to create a Movie
@@ -47,14 +40,13 @@ export class MovieResolver {
 
 		return newPost;
 	}
-	// create a new post
+	// add comment
 	@Mutation(() => Comment)
 	async createComment(
 		@Arg('id') id: string,
 		@Arg('comment') comment: string
 	): Promise<Comment> {
-		console.log('🌎🌎🌎🌎🌎🌎', id, comment);
-
+		// will create or update record in table
 		await prisma.movie.upsert({
 			create: {
 				// ... data to create a Movie

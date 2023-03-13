@@ -1,21 +1,19 @@
 import { ObjectType, Field, ID } from 'type-graphql';
 
+// schema of movie table in prisma
 @ObjectType()
 export class Movie {
 	@Field(() => ID)
 	id!: string;
 
-	@Field(() => String)
-	title!: string;
-
-	@Field(() => String)
-	tmdb_id!: string;
-
-	@Field(() => String)
+	@Field(() => Boolean)
 	recommend!: boolean;
 
-	@Field(() => String)
-	watched!: boolean;
+	@Field(() => Boolean)
+	watchlist!: boolean;
+
+	@Field(() => Boolean)
+	completed!: boolean;
 
 	@Field(() => Number)
 	rating!: number;
