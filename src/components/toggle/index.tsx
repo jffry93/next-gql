@@ -1,3 +1,4 @@
+import { useSession } from 'next-auth/react';
 import React from 'react';
 import ToggleButton from './ToggleButton';
 
@@ -11,23 +12,28 @@ interface ToggleContainerProps {
 }
 
 const ToggleContainer = ({ movie }: ToggleContainerProps) => {
+	const { data: session } = useSession();
 	return (
 		<div>
-			<ToggleButton
-				id={movie.id}
-				title={'watchlist'}
-				initialValue={movie.watchlist}
-			/>
-			<ToggleButton
-				id={movie.id}
-				title={'completed'}
-				initialValue={movie.completed}
-			/>
-			<ToggleButton
-				id={movie.id}
-				title={'recommend'}
-				initialValue={movie.recommend}
-			/>
+			{session?.user && (
+				<>
+					<ToggleButton
+						id={movie.id}
+						title={'watchlist'}
+						initialValue={movie.watchlist}
+					/>
+					<ToggleButton
+						id={movie.id}
+						title={'completed'}
+						initialValue={movie.completed}
+					/>
+					<ToggleButton
+						id={movie.id}
+						title={'recommend'}
+						initialValue={movie.recommend}
+					/>
+				</>
+			)}
 		</div>
 	);
 };

@@ -1,5 +1,6 @@
 import { createComment } from '@/graphql/api';
 import { SingleTMDB } from '@/graphql/schema/TMDB/SingleTMDB';
+import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { useMutation } from 'react-query';
 
@@ -17,7 +18,7 @@ const Comments = ({ movie }: CommentsProps) => {
 		id: movie.id,
 		comment: '',
 	});
-
+	const { data: session } = useSession();
 	const { mutate } = useMutation(createComment, {
 		onSuccess: (data) => {
 			const {
@@ -38,15 +39,17 @@ const Comments = ({ movie }: CommentsProps) => {
 
 	return (
 		<>
-			<form onSubmit={handleSubmit}>
-				<input
-					value={formData.comment}
-					onChange={(e) => {
-						setFormData({ ...formData, comment: e.target.value });
-					}}
-				/>
-				<button type='submit'>Create</button>
-			</form>
+			{session?.user && (
+				<form onSubmit={handleSubmit}>
+					<input
+						value={formData.comment}
+						onChange={(e) => {
+							setFormData({ ...formData, comment: e.target.value });
+						}}
+					/>
+					<button type='submit'>Create</button>
+				</form>
+			)}
 			{comment && <div>{comment}</div>}
 		</>
 	);
