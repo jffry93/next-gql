@@ -11,9 +11,9 @@ query getPopularMovies {
 			vote_average
 			vote_count
 		}
-		release_date
-		watchlist
-		recommend
-		completed
+		# release_date
+		# watchlist
+		# recommend
+		# completed
 	}
 }

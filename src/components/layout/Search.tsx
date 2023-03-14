@@ -45,19 +45,15 @@ const Search = () => {
 								onClick={() => {
 									handleSelectMovie(movie);
 								}}
+								className={
+									movie.watchlist ? `text-cyan-500` : `text-purple-700`
+								}
 							>
 								{movie.title}
 							</li>
 						);
 					})}
 			</ul>
-			{/* <button
-				onClick={() => {
-					console.log(inputValue);
-				}}
-			>
-				hello
-			</button> */}
 		</>
 	);
 };

@@ -1,5 +1,5 @@
 import { createComment } from '@/graphql/api';
-import { SingleTMDB } from '@/graphql/schema/TMDB/SingleTMDB';
+import { SingleMovie } from '@/pages/movie/[id]';
 import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { useMutation } from 'react-query';
@@ -9,13 +9,16 @@ export interface CreatePostInputs {
 	comment: string;
 }
 export interface CommentsProps {
-	movie: SingleTMDB;
+	movie: SingleMovie;
+	onCommentCreated: () => void;
 }
 
-const Comments = ({ movie }: CommentsProps) => {
-	const [comment, setComment] = useState<null | string>(movie.comment);
+const Comments = ({ movie, onCommentCreated }: CommentsProps) => {
+	const [comment, setComment] = useState<undefined | null | string>(
+		movie.comment
+	);
 	const [formData, setFormData] = useState<CreatePostInputs>({
-		id: movie.id,
+		id: movie.id + '',
 		comment: '',
 	});
 	const { data: session } = useSession();
@@ -25,7 +28,7 @@ const Comments = ({ movie }: CommentsProps) => {
 				createComment: { comment },
 			} = data;
 			setFormData({ ...formData, comment: '' });
-			setComment(formData.comment);
+			onCommentCreated();
 		},
 		onError: (error) => {
 			console.error('Failed to create post:', error);
@@ -36,7 +39,6 @@ const Comments = ({ movie }: CommentsProps) => {
 		e.preventDefault();
 		mutate(formData);
 	};
-
 	return (
 		<>
 			{session?.user && (
@@ -50,7 +52,9 @@ const Comments = ({ movie }: CommentsProps) => {
 					<button type='submit'>Create</button>
 				</form>
 			)}
-			{comment && <div>{comment}</div>}
+			{movie.allComments.map((data, index) => {
+				return <h1 key={index}>{data.comment}</h1>;
+			})}
 		</>
 	);
 };

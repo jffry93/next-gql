@@ -15,6 +15,12 @@ export type Scalars = {
   Float: number;
 };
 
+export type AllCommentsAttribute = {
+  __typename?: 'AllCommentsAttribute';
+  User?: Maybe<Array<UserAttribute>>;
+  comment: Scalars['ID'];
+};
+
 export type Comment = {
   __typename?: 'Comment';
   comment: Scalars['String'];
@@ -80,6 +86,7 @@ export type SearchMovieTmdb = {
 
 export type SingleTmdb = {
   __typename?: 'SingleTMDB';
+  allComments: Array<AllCommentsAttribute>;
   backdrop_path?: Maybe<Scalars['String']>;
   budget: Scalars['Float'];
   comment?: Maybe<Scalars['String']>;
@@ -103,17 +110,12 @@ export type SingleTmdb = {
 
 export type Tmdb = {
   __typename?: 'TMDB';
-  comment: Scalars['String'];
-  completed: Scalars['Boolean'];
   id: Scalars['ID'];
   img_data: ImageAttribute;
   overview: Scalars['String'];
-  rating: Scalars['Float'];
-  recommend: Scalars['Boolean'];
   release_date: Scalars['String'];
   title: Scalars['String'];
   vote_data: VoteAttribute;
-  watchlist: Scalars['Boolean'];
 };
 
 export type ToggleValue = {
@@ -121,6 +123,12 @@ export type ToggleValue = {
   id: Scalars['ID'];
   title: Scalars['String'];
   value: Scalars['String'];
+};
+
+export type UserAttribute = {
+  __typename?: 'UserAttribute';
+  image?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
 };
 
 export type VoteAttribute = {
@@ -132,7 +140,7 @@ export type VoteAttribute = {
 export type GetPopularMoviesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetPopularMoviesQuery = { __typename?: 'Query', getPopularMovies: Array<{ __typename?: 'TMDB', id: string, title: string, overview: string, release_date: string, watchlist: boolean, recommend: boolean, completed: boolean, img_data: { __typename?: 'ImageAttribute', backdrop_path: string, poster_path: string }, vote_data: { __typename?: 'VoteAttribute', vote_average: number, vote_count: number } }> };
+export type GetPopularMoviesQuery = { __typename?: 'Query', getPopularMovies: Array<{ __typename?: 'TMDB', id: string, title: string, overview: string, img_data: { __typename?: 'ImageAttribute', backdrop_path: string, poster_path: string }, vote_data: { __typename?: 'VoteAttribute', vote_average: number, vote_count: number } }> };
 
 export type SearchMoviesQueryVariables = Exact<{
   input: Scalars['String'];
@@ -146,7 +154,7 @@ export type GetSingleMovieQueryVariables = Exact<{
 }>;
 
 
-export type GetSingleMovieQuery = { __typename?: 'Query', getSingleMovie: { __typename?: 'SingleTMDB', id: string, revenue: number, runtime?: number | null, status: string, tagline?: string | null, title: string, overview?: string | null, backdrop_path?: string | null, poster_path?: string | null, vote_average: number, vote_count: number, release_date: string, budget: number, watchlist: boolean, recommend: boolean, completed: boolean, rating: number, comment?: string | null, genres: Array<{ __typename?: 'GenreAttribute', id: string, name: string }> } };
+export type GetSingleMovieQuery = { __typename?: 'Query', getSingleMovie: { __typename?: 'SingleTMDB', id: string, revenue: number, runtime?: number | null, status: string, tagline?: string | null, title: string, overview?: string | null, backdrop_path?: string | null, poster_path?: string | null, vote_average: number, vote_count: number, release_date: string, budget: number, watchlist: boolean, recommend: boolean, completed: boolean, rating: number, comment?: string | null, genres: Array<{ __typename?: 'GenreAttribute', id: string, name: string }>, allComments: Array<{ __typename?: 'AllCommentsAttribute', comment: string }> } };
 
 export type CreateCommentMutationVariables = Exact<{
   id: Scalars['String'];
@@ -180,10 +188,6 @@ export const GetPopularMoviesDocument = gql`
       vote_average
       vote_count
     }
-    release_date
-    watchlist
-    recommend
-    completed
   }
 }
     `;
@@ -223,6 +227,9 @@ export const GetSingleMovieDocument = gql`
     completed
     rating
     comment
+    allComments {
+      comment
+    }
   }
 }
     `;

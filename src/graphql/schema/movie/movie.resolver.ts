@@ -3,7 +3,6 @@ import { getSession } from 'next-auth/react';
 import { Resolver, Query, Mutation, Arg, Ctx } from 'type-graphql';
 import { prisma } from '../../../../prisma/db';
 import { Comment, Movie, ToggleValue } from './movie';
-import { NextApiRequest, NextApiResponse } from 'next';
 import type { ContextType } from '@/pages/api/graphql';
 
 @Resolver(Movie)
@@ -18,28 +17,42 @@ export class MovieResolver {
 	): Promise<{
 		title: string;
 		value: boolean;
-		id: string;
+		id: number;
 	}> {
 		const session = await getSession({ req });
 		console.log(session);
 		// will create or update record in table
-		await prisma.movie.upsert({
-			create: {
-				// ... data to create a Movie
-				id,
-				[title]: !value,
-			},
-			update: {
-				// ... in case it already exists, update
-				[title]: !value,
-			},
+		const searchDB = await prisma.movie.findFirst({
 			where: {
-				id,
-				// ... the filter for the Movie we want to update
+				id: Number(id),
+				userEmail: session?.user?.email,
 			},
 		});
+
+		if (searchDB !== null) {
+			await prisma.movie.update({
+				where: {
+					// ... provide filter here
+
+					imoID: searchDB?.imoID,
+				},
+				data: {
+					// ... provide data here
+					[title]: !value,
+				},
+			});
+		} else {
+			await prisma.movie.create({
+				data: {
+					// ... data to create a Movie
+					id: Number(id),
+					[title]: !value,
+					userEmail: session?.user?.email,
+				},
+			});
+		}
 		const newPost = {
-			id,
+			id: Number(id),
 			title,
 			value: !value,
 		};
@@ -50,30 +63,40 @@ export class MovieResolver {
 	@Mutation(() => Comment)
 	async createComment(
 		@Arg('id') id: string,
-		@Arg('comment') comment: string
+		@Arg('comment') comment: string,
+		@Ctx() { req }: ContextType
 	): Promise<Comment> {
+		const session = await getSession({ req });
+		const searchDB = await prisma.movie.findFirst({
+			where: {
+				id: Number(id),
+				userEmail: session?.user?.email,
+			},
+		});
+		console.log(searchDB);
 		// will create or update record in table
-		await prisma.movie.upsert({
+		const upsert = await prisma.movie.upsert({
 			create: {
 				// ... data to create a Movie
-				id,
+				id: Number(id),
 				comment: comment,
+				userEmail: session?.user?.email,
 			},
 			update: {
 				// ... in case it already exists, update
 				comment: comment,
 			},
 			where: {
-				id,
+				imoID: searchDB?.imoID,
 				// ... the filter for the Movie we want to update
 			},
 		});
+		console.log(upsert);
 		// takes inputs from formData
 		const userComment: Comment = {
 			id,
 			comment,
 		};
-		//  posts.push(newPost);
 		return userComment;
 	}
 }

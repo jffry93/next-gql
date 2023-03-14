@@ -42,6 +42,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  Movie         Movie[]
 }
 
 model VerificationToken {
@@ -56,12 +57,16 @@ model VerificationToken {
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 model Movie {
-  id        String  @id @default(uuid())
+  imoID     String  @id @default(uuid())
+  id        Int
   watchlist Boolean @default(false)
   recommend Boolean @default(false)
   completed Boolean @default(false)
   rating    Int     @default(0)
   comment   String?
+
+  User      User?   @relation(fields: [userEmail], references: [email])
+  userEmail String?
 
   @@index([id])
 }

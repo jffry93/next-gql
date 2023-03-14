@@ -1,6 +1,8 @@
+import type { ContextType } from '@/pages/api/graphql';
 import { mergeObjectWithArray } from '@/utils/mergeObjectWithArray';
 import { mergeTwoArrays } from '@/utils/mergeTwoArrays';
-import { Resolver, Query, Arg } from 'type-graphql';
+import { getSession } from 'next-auth/react';
+import { Resolver, Query, Arg, Ctx } from 'type-graphql';
 import { prisma } from '../../../../prisma/db';
 import { Movie } from '../movie/movie';
 import { SearchMovieTMDB } from './searchMovieTMDB';
@@ -16,7 +18,7 @@ interface SingleTMDBRes {
 			name: string;
 		}
 	];
-	id: number | string;
+	id: number;
 	overview: string | null;
 	poster_path: string | null;
 	release_date: string;
@@ -27,6 +29,15 @@ interface SingleTMDBRes {
 	title: string;
 	vote_average: number;
 	vote_count: number;
+}
+interface SingleMovieWithComments extends SingleTMDBRes {
+	allComments: {
+		comment: string | null;
+		User: {
+			name: string | null;
+			image: string | null;
+		} | null;
+	}[];
 }
 
 const defaultObj = {
@@ -42,15 +53,27 @@ export class TMDBResolver {
 	// Get All Popular Movies
 	// Get users hot take 🌶️🌶️🌶️ and combine the two
 	@Query(() => [TMDB])
-	async getPopularMovies(): Promise<Array<TMDB & Movie>> {
+	async getPopularMovies(): // @Ctx() { req }: ContextType
+	Promise<Array<TMDB>> {
+		// const session = await getSession({ req });
+
+		// console.log('🧬🧬🧬🧬🧬🧬🧬🧬', req.headers);
+
 		const imagePath = 'https://image.tmdb.org/t/p/original/';
 		// Get movies from TMDB
 		const data = await fetch(
 			`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.MOVIE_DB_KEY}&language=en-US&page=1`
 		);
+
 		const response = await data.json();
 		//  Get Opinion from Prisma
-		const imo = await prisma.movie.findMany();
+
+		// const imo = await prisma.movie.findMany({
+		// 	where: {
+		// 		userEmail: session?.user?.email,
+		// 	},
+		// });
+		// console.log(imo);
 		// Update Obj key and value pair to send to frontend
 		const updateResponse: TMDB[] = response.results.map((element: any) => {
 			const {
@@ -81,14 +104,18 @@ export class TMDBResolver {
 			return tmdbObj;
 		});
 		// Add your Opinion
-		const moviesWithIMO = mergeTwoArrays(imo, updateResponse, 'id', defaultObj);
+		// const moviesWithIMO = mergeTwoArrays(imo, updateResponse, 'id', defaultObj);
 		// Send spice to front 🌶️🌶️🌶️
-		return moviesWithIMO;
+		return updateResponse;
 	}
 	@Query(() => SingleTMDB)
 	async getSingleMovie(
+		@Ctx() { req }: ContextType,
 		@Arg('movie_id', { nullable: true }) movie_id?: string
-	): Promise<SingleTMDB & Movie> {
+	): Promise<SingleMovieWithComments> {
+		// console.log('🧬🧬🧬🧬🧬🧬🧬🧬', req.headers);
+		const session = await getSession({ req });
+		// console.log('🌎🌎🌎🌎', session);
 		const imagePath = 'https://image.tmdb.org/t/p/original';
 		const apiKey = process.env.MOVIE_DB_KEY;
 		const data = await fetch(
@@ -96,28 +123,54 @@ export class TMDBResolver {
 		);
 		const movie: SingleTMDBRes = await data.json();
 
-		const imo = await prisma.movie.findMany();
+		const imo = await prisma.movie.findMany({
+			where: { userEmail: session?.user?.email },
+		});
 		// Add images url to Object
-		movie.id = movie.id + '';
+		movie.id = movie.id;
 		movie.backdrop_path = imagePath + movie.backdrop_path;
 		movie.poster_path = imagePath + movie.poster_path;
 		// merge object with array and return types
 		const movieWithIMO = mergeObjectWithArray(movie, imo, 'id', defaultObj);
-		//return superObject
-		return movieWithIMO;
+		const allComments = await prisma.movie.findMany({
+			where: { id: movie.id, comment: { not: null } },
+			select: {
+				comment: true,
+				// userEmail: true,
+				User: {
+					select: {
+						name: true,
+						image: true,
+					},
+				},
+			},
+		});
+
+		return { ...movieWithIMO, allComments };
 	}
 	@Query(() => [SearchMovieTMDB])
 	async searchMovies(
-		@Arg('input') input: string
+		@Arg('input') input: string,
+		@Ctx() { req }: ContextType
 	): Promise<Array<SearchMovieTMDB>> {
+		const session = await getSession({ req });
+		// console.log('🌎🌎🌎🌎', session);
 		const apiKey = process.env.MOVIE_DB_KEY;
 		const data = await fetch(
 			`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=${input}&page=1&include_adult=false`
 		);
 		const { results } = await data.json();
 		// collect hot take 🔥🔥🔥
-		const imo = await prisma.movie.findMany();
+		const imo = await prisma.movie.findMany({
+			where: { userEmail: session?.user?.email },
+		});
 		const superArray = mergeTwoArrays(imo, results, 'id', defaultObj);
+		// superArray.forEach((obj) => {
+		// 	if (obj.id === 315162) {
+		// 		console.log('🔥🔥🔥', obj);
+		// 	}
+		// });
+		// console.log(superArray);
 		const response = superArray.map((obj) => {
 			return {
 				completed: obj.completed,

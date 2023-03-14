@@ -19,15 +19,33 @@ export class GenreAttribute {
 }
 
 @ObjectType()
+export class UserAttribute {
+	@Field(() => String, { nullable: true })
+	name!: number | null;
+
+	@Field(() => String, { nullable: true })
+	image!: string | null;
+}
+
+@ObjectType()
+export class AllCommentsAttribute {
+	@Field(() => ID)
+	comment!: number | null;
+
+	@Field(() => [UserAttribute], { nullable: true })
+	User!: UserAttribute[] | null;
+}
+
+@ObjectType()
 export class SingleTMDB {
 	@Field(() => ID)
-	id!: string;
+	id!: number;
 
 	@Field(() => String)
 	title!: string;
 
 	@Field(() => String, { nullable: true })
-	overview!: string | null;
+	overview!: string | null | undefined;
 
 	@Field(() => String, { nullable: true })
 	backdrop_path!: string | null;
@@ -76,4 +94,7 @@ export class SingleTMDB {
 
 	@Field(() => String, { nullable: true })
 	comment!: string | null;
+
+	@Field(() => [AllCommentsAttribute])
+	allComments!: AllCommentsAttribute[];
 }

@@ -18,7 +18,7 @@ const ToggleButton = ({
 
 	const handleClick = debounce(() => {
 		// console.log('click toggle button');
-		mutate({ id, title, value });
+		mutate({ id: id + '', title, value });
 	}, 250);
 
 	const { mutate } = useMutation(toggleValue, {

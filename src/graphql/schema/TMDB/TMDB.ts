@@ -38,18 +38,18 @@ export class TMDB {
 	@Field(() => String)
 	release_date!: string;
 
-	@Field(() => Boolean)
-	watchlist!: boolean;
+	// @Field(() => Boolean)
+	// watchlist!: boolean;
 
-	@Field(() => Boolean)
-	recommend!: boolean;
+	// @Field(() => Boolean)
+	// recommend!: boolean;
 
-	@Field(() => Boolean)
-	completed!: boolean;
+	// @Field(() => Boolean)
+	// completed!: boolean;
 
-	@Field(() => Number)
-	rating!: number;
+	// @Field(() => Number)
+	// rating!: number;
 
-	@Field(() => String)
-	comment!: string;
+	// @Field(() => String)
+	// comment!: string;
 }

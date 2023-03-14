@@ -22,5 +22,12 @@ query getSingleMovie($movie_id: String!) {
 		completed
 		rating
 		comment
+		allComments {
+			comment
+			User {
+				name
+				image
+			}
+		}
 	}
 }

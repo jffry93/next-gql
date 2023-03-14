@@ -2,18 +2,18 @@ import { ObjectType, Field, ID } from 'type-graphql';
 
 @ObjectType()
 export class SearchMovieTMDB {
-  @Field(() => ID)
-  id!: string;
+	@Field(() => ID)
+	id!: number;
 
-  @Field(() => String, { nullable: true })
-  title!: string | null;
+	@Field(() => String, { nullable: true })
+	title!: string | null;
 
-  @Field(() => Boolean)
-  watchlist!: boolean;
+	@Field(() => Boolean)
+	watchlist!: boolean;
 
-  @Field(() => Boolean)
-  recommend!: boolean;
+	@Field(() => Boolean)
+	recommend!: boolean;
 
-  @Field(() => Boolean)
-  completed!: boolean;
+	@Field(() => Boolean)
+	completed!: boolean;
 }
