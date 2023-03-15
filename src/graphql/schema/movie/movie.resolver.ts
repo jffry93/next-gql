@@ -73,7 +73,7 @@ export class MovieResolver {
 				userEmail: session?.user?.email,
 			},
 		});
-		console.log(searchDB);
+		// console.log(searchDB);
 		// will create or update record in table
 		const upsert = await prisma.movie.upsert({
 			create: {

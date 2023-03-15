@@ -154,23 +154,24 @@ export class TMDBResolver {
 		@Ctx() { req }: ContextType
 	): Promise<Array<SearchMovieTMDB>> {
 		const session = await getSession({ req });
-		// console.log('🌎🌎🌎🌎', session);
+		console.log('🌎🌎🌎🌎', session);
 		const apiKey = process.env.MOVIE_DB_KEY;
 		const data = await fetch(
 			`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=${input}&page=1&include_adult=false`
 		);
 		const { results } = await data.json();
 		// collect hot take 🔥🔥🔥
-		const imo = await prisma.movie.findMany({
+		let imo: Movie[] = [
+			{
+				id: 1,
+				...defaultObj,
+			},
+		];
+		imo = await prisma.movie.findMany({
 			where: { userEmail: session?.user?.email },
 		});
 		const superArray = mergeTwoArrays(imo, results, 'id', defaultObj);
-		// superArray.forEach((obj) => {
-		// 	if (obj.id === 315162) {
-		// 		console.log('🔥🔥🔥', obj);
-		// 	}
-		// });
-		// console.log(superArray);
+
 		const response = superArray.map((obj) => {
 			return {
 				completed: obj.completed,

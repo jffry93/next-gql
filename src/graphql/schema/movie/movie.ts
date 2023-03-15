@@ -4,7 +4,7 @@ import { ObjectType, Field, ID } from 'type-graphql';
 @ObjectType()
 export class Movie {
 	@Field(() => ID)
-	id!: string;
+	id!: number;
 
 	@Field(() => Boolean)
 	recommend!: boolean;

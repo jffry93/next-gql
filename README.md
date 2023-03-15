@@ -1,3 +1,7 @@
+# imoDB
+
+An application built to refresh graphql and next js
+
 Required to start app
 
 .env files
