@@ -1,3 +1,4 @@
+// Schema used for movie thumbnails
 import { ObjectType, Field, ID } from 'type-graphql';
 
 @ObjectType()
@@ -10,7 +11,7 @@ export class ImageAttribute {
 }
 
 @ObjectType()
-export class VoteAttribute {
+class VoteAttribute {
 	@Field(() => Number)
 	vote_average!: number;
 

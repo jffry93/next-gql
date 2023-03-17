@@ -1,7 +1,7 @@
 import Comments from '@/components/comments';
 import ToggleContainer from '@/components/toggle';
 import { getSingleMovie } from '@/graphql/api';
-import { SingleTMDB } from '@/graphql/resolvers/TMDB/SingleTMDB';
+import { SingleTMDB } from '@/graphql/resolvers/TMDB/schemas/SingleTMDB';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';

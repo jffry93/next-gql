@@ -1,4 +1,6 @@
+// Movie info to display in search results
 import { ObjectType, Field, ID } from 'type-graphql';
+import { ImageAttribute } from './TMDB';
 
 @ObjectType()
 export class SearchMovieTMDB {
@@ -16,4 +18,7 @@ export class SearchMovieTMDB {
 
 	@Field(() => Boolean)
 	completed!: boolean;
+
+	@Field(() => ImageAttribute)
+	img_data!: ImageAttribute;
 }

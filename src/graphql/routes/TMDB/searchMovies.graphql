@@ -5,5 +5,9 @@ query searchMovies($input: String!) {
 		watchlist
 		recommend
 		completed
+		img_data {
+			backdrop_path
+			poster_path
+		}
 	}
 }

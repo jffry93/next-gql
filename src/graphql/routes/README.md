@@ -1,3 +1,5 @@
+# This is where you execute queries or mutatations
+
 Must set up resolver in order to see the options to use
 
 Once this is set up you can run the yarn generate to create the sdk for the frontend

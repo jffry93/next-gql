@@ -4,41 +4,14 @@ import { mergeTwoArrays } from '@/utils/mergeTwoArrays';
 import { getSession } from 'next-auth/react';
 import { Resolver, Query, Arg, Ctx } from 'type-graphql';
 import { prisma } from '../../../../prisma/db';
-import { Movie } from '../movie/movie';
-import { SearchMovieTMDB } from './searchMovieTMDB';
-import { SingleTMDB } from './SingleTMDB';
-import { TMDB } from './TMDB';
-
-interface SingleTMDBRes {
-	backdrop_path: string | null;
-	budget: number;
-	genres: [
-		{
-			id: number;
-			name: string;
-		}
-	];
-	id: number;
-	overview: string | null;
-	poster_path: string | null;
-	release_date: string;
-	revenue: number;
-	runtime: number | null;
-	status: string;
-	tagline: string | null;
-	title: string;
-	vote_average: number;
-	vote_count: number;
-}
-interface SingleMovieWithComments extends SingleTMDBRes {
-	allComments: {
-		comment: string | null;
-		User: {
-			name: string | null;
-			image: string | null;
-		} | null;
-	}[];
-}
+import { Movie } from '../imoDB/movie';
+import { SearchMovieTMDB } from './schemas/searchMovieTMDB';
+import {
+	SingleMovieWithComments,
+	SingleTMDB,
+	SingleTMDBRes,
+} from './schemas/SingleTMDB';
+import { TMDB } from './schemas/TMDB';
 
 const defaultObj = {
 	watchlist: false,
@@ -47,13 +20,13 @@ const defaultObj = {
 	rating: 0,
 	comment: null,
 };
+const TMDB_IMAGE_PATH = 'https://image.tmdb.org/t/p/original';
 
 @Resolver(TMDB)
 export class TMDBResolver {
 	@Query(() => [TMDB])
 	async getPopularMovies(): Promise<Array<TMDB>> {
 		// Get movies from TMDB
-		const imagePath = 'https://image.tmdb.org/t/p/original/';
 		const data = await fetch(
 			`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.MOVIE_DB_KEY}&language=en-US&page=1`
 		);
@@ -76,8 +49,8 @@ export class TMDBResolver {
 				title,
 				overview,
 				img_data: {
-					backdrop_path: imagePath + backdrop_path,
-					poster_path: imagePath + poster_path,
+					backdrop_path: TMDB_IMAGE_PATH + backdrop_path,
+					poster_path: TMDB_IMAGE_PATH + poster_path,
 				},
 				vote_data: {
 					vote_average,
@@ -108,14 +81,12 @@ export class TMDBResolver {
 		});
 
 		// Add images url to Object
-		const imagePath = 'https://image.tmdb.org/t/p/original';
 		movie.id = movie.id;
-		movie.backdrop_path = imagePath + movie.backdrop_path;
-		movie.poster_path = imagePath + movie.poster_path;
+		movie.backdrop_path = TMDB_IMAGE_PATH + movie.backdrop_path;
+		movie.poster_path = TMDB_IMAGE_PATH + movie.poster_path;
 
 		// merge object with array and return types
 		const movieWithIMO = mergeObjectWithArray(movie, imo, 'id', defaultObj);
-		console.log('🌎🌎🌎🌎🌎', movieWithIMO);
 
 		// GET all comments to to share
 		const allComments = await prisma.movie.findMany({
@@ -131,7 +102,6 @@ export class TMDBResolver {
 				},
 			},
 		});
-		console.log('🌎🌎🌎🌎🌎', allComments);
 
 		return { ...movieWithIMO, allComments };
 	}
@@ -161,6 +131,9 @@ export class TMDBResolver {
 				where: { userEmail: session?.user?.email },
 			});
 		}
+		if (results.length > 10) {
+			results.splice(10);
+		}
 		//Combine the opinions with names
 		const superArray = mergeTwoArrays(imo, results, 'id', defaultObj);
 
@@ -171,6 +144,10 @@ export class TMDBResolver {
 				recommend: obj.recommend,
 				watchlist: obj.watchlist,
 				title: obj.title,
+				img_data: {
+					backdrop_path: TMDB_IMAGE_PATH + obj.backdrop_path,
+					poster_path: TMDB_IMAGE_PATH + obj.poster_path,
+				},
 			};
 		});
 	}

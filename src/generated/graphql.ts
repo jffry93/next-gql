@@ -79,6 +79,7 @@ export type SearchMovieTmdb = {
   __typename?: 'SearchMovieTMDB';
   completed: Scalars['Boolean'];
   id: Scalars['ID'];
+  img_data: ImageAttribute;
   recommend: Scalars['Boolean'];
   title?: Maybe<Scalars['String']>;
   watchlist: Scalars['Boolean'];
@@ -147,7 +148,7 @@ export type SearchMoviesQueryVariables = Exact<{
 }>;
 
 
-export type SearchMoviesQuery = { __typename?: 'Query', searchMovies: Array<{ __typename?: 'SearchMovieTMDB', id: string, title?: string | null, watchlist: boolean, recommend: boolean, completed: boolean }> };
+export type SearchMoviesQuery = { __typename?: 'Query', searchMovies: Array<{ __typename?: 'SearchMovieTMDB', id: string, title?: string | null, watchlist: boolean, recommend: boolean, completed: boolean, img_data: { __typename?: 'ImageAttribute', backdrop_path: string, poster_path: string } }> };
 
 export type GetSingleMovieQueryVariables = Exact<{
   movie_id: Scalars['String'];
@@ -199,6 +200,10 @@ export const SearchMoviesDocument = gql`
     watchlist
     recommend
     completed
+    img_data {
+      backdrop_path
+      poster_path
+    }
   }
 }
     `;

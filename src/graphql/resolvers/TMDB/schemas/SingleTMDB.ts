@@ -1,23 +1,7 @@
+// This is the schema used to get the Movie Details
 import { ObjectType, Field, ID } from 'type-graphql';
 
-@ObjectType()
-export class ImageAttribute {
-	@Field(() => String, { nullable: true })
-	backdrop_path!: string | null;
-
-	@Field(() => String, { nullable: true })
-	poster_path!: string | null;
-}
-
-@ObjectType()
-export class GenreAttribute {
-	@Field(() => ID)
-	id!: number;
-
-	@Field(() => String)
-	name!: string;
-}
-
+//Comment schema for IMO data
 @ObjectType()
 export class UserAttribute {
 	@Field(() => String, { nullable: true })
@@ -34,6 +18,16 @@ export class AllCommentsAttribute {
 
 	@Field(() => UserAttribute, { nullable: true })
 	User!: UserAttribute | null;
+}
+
+// Movie details schema for TMDB data
+@ObjectType()
+class GenreAttribute {
+	@Field(() => ID)
+	id!: number;
+
+	@Field(() => String)
+	name!: string;
 }
 
 @ObjectType()
@@ -97,4 +91,37 @@ export class SingleTMDB {
 
 	@Field(() => [AllCommentsAttribute])
 	allComments!: AllCommentsAttribute[];
+}
+
+// Response from TMBD for individual movie
+export interface SingleTMDBRes {
+	backdrop_path: string | null;
+	budget: number;
+	genres: [
+		{
+			id: number;
+			name: string;
+		}
+	];
+	id: number;
+	overview: string | null;
+	poster_path: string | null;
+	release_date: string;
+	revenue: number;
+	runtime: number | null;
+	status: string;
+	tagline: string | null;
+	title: string;
+	vote_average: number;
+	vote_count: number;
+}
+// types with comments from prisma database
+export interface SingleMovieWithComments extends SingleTMDBRes {
+	allComments: {
+		comment: string | null;
+		User: {
+			name: string | null;
+			image: string | null;
+		} | null;
+	}[];
 }

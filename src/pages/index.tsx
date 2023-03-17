@@ -1,6 +1,6 @@
 import MovieItem from '@/components/MovieItem';
 import { getPopularMovies } from '@/graphql/api';
-import { TMDB } from '@/graphql/resolvers/TMDB/TMDB';
+import { TMDB } from '@/graphql/resolvers/TMDB/schemas/TMDB';
 import Head from 'next/head';
 
 interface HomeProps {

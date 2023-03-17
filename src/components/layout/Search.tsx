@@ -11,8 +11,8 @@ const Search = () => {
 	const throttledHandleChange = useRef(
 		throttle(
 			async (value: string) => {
-				const data = await searchMovies({ input: value });
-				setDropdown(data.searchMovies);
+				const { searchMovies: data } = await searchMovies({ input: value });
+				setDropdown(data);
 			},
 			250,
 			{ leading: false, trailing: true }
