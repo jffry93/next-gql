@@ -2,8 +2,8 @@ import { ApolloServer } from 'apollo-server-micro';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { MovieResolver } from '@/graphql/schema/movie/movie.resolver';
-import { TMDBResolver } from '@/graphql/schema/TMDB/TMDB.resolver';
+import { MovieResolver } from '@/graphql/resolvers/movie/movie.resolver';
+import { TMDBResolver } from '@/graphql/resolvers/TMDB/TMDB.resolver';
 import { getSession } from 'next-auth/react';
 import { ContextFunction } from 'apollo-server-core';
 

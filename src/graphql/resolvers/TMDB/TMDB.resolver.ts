@@ -50,30 +50,14 @@ const defaultObj = {
 
 @Resolver(TMDB)
 export class TMDBResolver {
-	// Get All Popular Movies
-	// Get users hot take 🌶️🌶️🌶️ and combine the two
 	@Query(() => [TMDB])
-	async getPopularMovies(): // @Ctx() { req }: ContextType
-	Promise<Array<TMDB>> {
-		// const session = await getSession({ req });
-
-		// console.log('🧬🧬🧬🧬🧬🧬🧬🧬', req.headers);
-
-		const imagePath = 'https://image.tmdb.org/t/p/original/';
+	async getPopularMovies(): Promise<Array<TMDB>> {
 		// Get movies from TMDB
+		const imagePath = 'https://image.tmdb.org/t/p/original/';
 		const data = await fetch(
 			`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.MOVIE_DB_KEY}&language=en-US&page=1`
 		);
-
 		const response = await data.json();
-		//  Get Opinion from Prisma
-
-		// const imo = await prisma.movie.findMany({
-		// 	where: {
-		// 		userEmail: session?.user?.email,
-		// 	},
-		// });
-		// console.log(imo);
 		// Update Obj key and value pair to send to frontend
 		const updateResponse: TMDB[] = response.results.map((element: any) => {
 			const {
@@ -103,9 +87,7 @@ export class TMDBResolver {
 			};
 			return tmdbObj;
 		});
-		// Add your Opinion
-		// const moviesWithIMO = mergeTwoArrays(imo, updateResponse, 'id', defaultObj);
-		// Send spice to front 🌶️🌶️🌶️
+
 		return updateResponse;
 	}
 	@Query(() => SingleTMDB)
@@ -113,25 +95,29 @@ export class TMDBResolver {
 		@Ctx() { req }: ContextType,
 		@Arg('movie_id', { nullable: true }) movie_id?: string
 	): Promise<SingleMovieWithComments> {
-		// console.log('🧬🧬🧬🧬🧬🧬🧬🧬', req.headers);
 		const session = await getSession({ req });
-		// console.log('🌎🌎🌎🌎', session);
-		const imagePath = 'https://image.tmdb.org/t/p/original';
+		// get movie user searched from TMDB
 		const apiKey = process.env.MOVIE_DB_KEY;
 		const data = await fetch(
 			`https://api.themoviedb.org/3/movie/${movie_id}?api_key=${apiKey}&language=en-US`
 		);
 		const movie: SingleTMDBRes = await data.json();
-
+		// GET opinion of movies from Prisma
 		const imo = await prisma.movie.findMany({
 			where: { userEmail: session?.user?.email },
 		});
+
 		// Add images url to Object
+		const imagePath = 'https://image.tmdb.org/t/p/original';
 		movie.id = movie.id;
 		movie.backdrop_path = imagePath + movie.backdrop_path;
 		movie.poster_path = imagePath + movie.poster_path;
+
 		// merge object with array and return types
 		const movieWithIMO = mergeObjectWithArray(movie, imo, 'id', defaultObj);
+		console.log('🌎🌎🌎🌎🌎', movieWithIMO);
+
+		// GET all comments to to share
 		const allComments = await prisma.movie.findMany({
 			where: { id: movie.id, comment: { not: null } },
 			select: {
@@ -145,6 +131,7 @@ export class TMDBResolver {
 				},
 			},
 		});
+		console.log('🌎🌎🌎🌎🌎', allComments);
 
 		return { ...movieWithIMO, allComments };
 	}
@@ -154,27 +141,30 @@ export class TMDBResolver {
 		@Ctx() { req }: ContextType
 	): Promise<Array<SearchMovieTMDB>> {
 		const session = await getSession({ req });
-		console.log('🌎🌎🌎🌎', session);
+		// get movie titles from TMDB
 		const apiKey = process.env.MOVIE_DB_KEY;
 		const data = await fetch(
 			`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=${input}&page=1&include_adult=false`
 		);
 		const { results } = await data.json();
-		// collect hot take 🔥🔥🔥
+		// Opinions if no one is signed in
 		let imo: Movie[] = [
 			{
 				id: 1,
 				...defaultObj,
 			},
 		];
+		//change value if user is signed in
 		if (session) {
+			// collect hot take from Prisma 🔥🔥🔥
 			imo = await prisma.movie.findMany({
 				where: { userEmail: session?.user?.email },
 			});
 		}
+		//Combine the opinions with names
 		const superArray = mergeTwoArrays(imo, results, 'id', defaultObj);
 
-		const response = superArray.map((obj) => {
+		return superArray.map((obj) => {
 			return {
 				completed: obj.completed,
 				id: obj.id,
@@ -183,7 +173,5 @@ export class TMDBResolver {
 				title: obj.title,
 			};
 		});
-
-		return response;
 	}
 }

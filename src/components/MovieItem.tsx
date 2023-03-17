@@ -1,4 +1,4 @@
-import { TMDB } from '@/graphql/schema/TMDB/TMDB';
+import { TMDB } from '@/graphql/resolvers/TMDB/TMDB';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React from 'react';

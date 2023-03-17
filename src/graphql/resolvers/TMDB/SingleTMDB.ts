@@ -32,8 +32,8 @@ export class AllCommentsAttribute {
 	@Field(() => ID)
 	comment!: number | null;
 
-	@Field(() => [UserAttribute], { nullable: true })
-	User!: UserAttribute[] | null;
+	@Field(() => UserAttribute, { nullable: true })
+	User!: UserAttribute | null;
 }
 
 @ObjectType()
