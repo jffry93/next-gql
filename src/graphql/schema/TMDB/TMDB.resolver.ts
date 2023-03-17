@@ -167,9 +167,11 @@ export class TMDBResolver {
 				...defaultObj,
 			},
 		];
-		imo = await prisma.movie.findMany({
-			where: { userEmail: session?.user?.email },
-		});
+		if (session) {
+			imo = await prisma.movie.findMany({
+				where: { userEmail: session?.user?.email },
+			});
+		}
 		const superArray = mergeTwoArrays(imo, results, 'id', defaultObj);
 
 		const response = superArray.map((obj) => {
