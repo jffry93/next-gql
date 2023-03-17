@@ -128,6 +128,7 @@ export type ToggleValue = {
 
 export type UserAttribute = {
   __typename?: 'UserAttribute';
+  id: Scalars['String'];
   image?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
 };
@@ -155,7 +156,7 @@ export type GetSingleMovieQueryVariables = Exact<{
 }>;
 
 
-export type GetSingleMovieQuery = { __typename?: 'Query', getSingleMovie: { __typename?: 'SingleTMDB', id: string, revenue: number, runtime?: number | null, status: string, tagline?: string | null, title: string, overview?: string | null, backdrop_path?: string | null, poster_path?: string | null, vote_average: number, vote_count: number, release_date: string, budget: number, watchlist: boolean, recommend: boolean, completed: boolean, rating: number, comment?: string | null, genres: Array<{ __typename?: 'GenreAttribute', id: string, name: string }>, allComments: Array<{ __typename?: 'AllCommentsAttribute', comment: string, User?: { __typename?: 'UserAttribute', name?: string | null, image?: string | null } | null }> } };
+export type GetSingleMovieQuery = { __typename?: 'Query', getSingleMovie: { __typename?: 'SingleTMDB', id: string, revenue: number, runtime?: number | null, status: string, tagline?: string | null, title: string, overview?: string | null, backdrop_path?: string | null, poster_path?: string | null, vote_average: number, vote_count: number, release_date: string, budget: number, watchlist: boolean, recommend: boolean, completed: boolean, rating: number, comment?: string | null, genres: Array<{ __typename?: 'GenreAttribute', id: string, name: string }>, allComments: Array<{ __typename?: 'AllCommentsAttribute', comment: string, User?: { __typename?: 'UserAttribute', id: string, name?: string | null, image?: string | null } | null }> } };
 
 export type CreateCommentMutationVariables = Exact<{
   id: Scalars['String'];
@@ -235,6 +236,7 @@ export const GetSingleMovieDocument = gql`
     allComments {
       comment
       User {
+        id
         name
         image
       }

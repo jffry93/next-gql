@@ -96,12 +96,14 @@ export class TMDBResolver {
 				// userEmail: true,
 				User: {
 					select: {
+						id: true,
 						name: true,
 						image: true,
 					},
 				},
 			},
 		});
+		console.log(allComments);
 
 		return { ...movieWithIMO, allComments };
 	}

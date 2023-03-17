@@ -4,8 +4,6 @@ import { getSingleMovie } from '@/graphql/api';
 import { SingleTMDB } from '@/graphql/resolvers/TMDB/schemas/SingleTMDB';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
-
 export interface SingleMovie {
 	id: string;
 	revenue: number;
@@ -14,8 +12,8 @@ export interface SingleMovie {
 	tagline?: string | null;
 	title: string;
 	overview?: string | null;
-	genres?: {
-		id: number;
+	genres: {
+		id: string;
 		name: string;
 	}[];
 	backdrop_path?: string | null;
@@ -32,11 +30,13 @@ export interface SingleMovie {
 	allComments: {
 		comment: string | null;
 		User?: {
-			name: string | null;
-			image: string | null;
+			id: string;
+			name?: string | null;
+			image?: string | null;
 		} | null;
 	}[];
 }
+
 interface ParamsType {
 	params: { id: string };
 }
@@ -62,17 +62,7 @@ const MovieDetail = ({ params }: MovieDetailProps & ParamsType) => {
 		const fetchMovie = async () => {
 			const data = await getSingleMovie({ movie_id: params.id });
 
-			let obj = data?.getSingleMovie;
-			if (obj) {
-				const genres = obj.genres.map((genre) => ({
-					...genre,
-					id: Number(genre.id),
-				}));
-				setMovie({
-					...obj,
-					genres,
-				});
-			}
+			setMovie(data?.getSingleMovie);
 		};
 		fetchMovie();
 	}, [params.id, toggleState]);

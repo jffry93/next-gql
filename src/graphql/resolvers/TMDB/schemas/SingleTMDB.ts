@@ -4,6 +4,9 @@ import { ObjectType, Field, ID } from 'type-graphql';
 //Comment schema for IMO data
 @ObjectType()
 export class UserAttribute {
+	@Field(() => String)
+	id!: number;
+
 	@Field(() => String, { nullable: true })
 	name!: number | null;
 
@@ -120,6 +123,7 @@ export interface SingleMovieWithComments extends SingleTMDBRes {
 	allComments: {
 		comment: string | null;
 		User: {
+			id: string;
 			name: string | null;
 			image: string | null;
 		} | null;

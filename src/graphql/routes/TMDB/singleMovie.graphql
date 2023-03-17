@@ -25,6 +25,7 @@ query getSingleMovie($movie_id: String!) {
 		allComments {
 			comment
 			User {
+				id
 				name
 				image
 			}

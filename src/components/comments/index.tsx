@@ -3,6 +3,7 @@ import { SingleMovie } from '@/pages/movie/[id]';
 import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { useMutation } from 'react-query';
+import Comment from './Comment';
 
 export interface CreatePostInputs {
 	id: string;
@@ -14,9 +15,6 @@ export interface CommentsProps {
 }
 
 const Comments = ({ movie, onCommentCreated }: CommentsProps) => {
-	const [comment, setComment] = useState<undefined | null | string>(
-		movie.comment
-	);
 	const [formData, setFormData] = useState<CreatePostInputs>({
 		id: movie.id + '',
 		comment: '',
@@ -53,7 +51,7 @@ const Comments = ({ movie, onCommentCreated }: CommentsProps) => {
 				</form>
 			)}
 			{movie.allComments.map((data, index) => {
-				return <h1 key={index}>{data.comment}</h1>;
+				return <Comment key={data.User?.name} data={data} />;
 			})}
 		</>
 	);
