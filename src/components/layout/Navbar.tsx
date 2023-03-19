@@ -11,6 +11,7 @@ const Navbar = () => {
 			<Link href='/'>Home</Link>
 			<Link href='/about'>About</Link>
 			<Link href='/movies'>Movies</Link>
+			<Link href='/profile'>Profile</Link>
 			<NextAuth />
 		</nav>
 	);

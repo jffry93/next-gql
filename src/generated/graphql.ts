@@ -49,13 +49,17 @@ export type Mutation = {
 export type MutationCreateCommentArgs = {
   comment: Scalars['String'];
   id: Scalars['String'];
+  img_path: Scalars['String'];
+  title: Scalars['String'];
 };
 
 
 export type MutationToggleValueArgs = {
   id: Scalars['String'];
-  title: Scalars['String'];
-  value: Scalars['Boolean'];
+  img_path: Scalars['String'];
+  title?: InputMaybe<Scalars['String']>;
+  toggleKey: Scalars['String'];
+  toggleValue: Scalars['Boolean'];
 };
 
 export type Query = {
@@ -122,8 +126,8 @@ export type Tmdb = {
 export type ToggleValue = {
   __typename?: 'ToggleValue';
   id: Scalars['ID'];
-  title: Scalars['String'];
-  value: Scalars['String'];
+  toggleKey: Scalars['String'];
+  toggleValue: Scalars['String'];
 };
 
 export type UserAttribute = {
@@ -160,6 +164,8 @@ export type GetSingleMovieQuery = { __typename?: 'Query', getSingleMovie: { __ty
 
 export type CreateCommentMutationVariables = Exact<{
   id: Scalars['String'];
+  title: Scalars['String'];
+  img_path: Scalars['String'];
   comment: Scalars['String'];
 }>;
 
@@ -168,12 +174,14 @@ export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { 
 
 export type ToggleValueMutationVariables = Exact<{
   title: Scalars['String'];
+  toggleKey: Scalars['String'];
+  img_path: Scalars['String'];
   id: Scalars['String'];
-  value: Scalars['Boolean'];
+  toggleValue: Scalars['Boolean'];
 }>;
 
 
-export type ToggleValueMutation = { __typename?: 'Mutation', toggleValue: { __typename?: 'ToggleValue', title: string, value: string, id: string } };
+export type ToggleValueMutation = { __typename?: 'Mutation', toggleValue: { __typename?: 'ToggleValue', id: string, toggleKey: string, toggleValue: string } };
 
 
 export const GetPopularMoviesDocument = gql`
@@ -245,19 +253,25 @@ export const GetSingleMovieDocument = gql`
 }
     `;
 export const CreateCommentDocument = gql`
-    mutation createComment($id: String!, $comment: String!) {
-  createComment(id: $id, comment: $comment) {
+    mutation createComment($id: String!, $title: String!, $img_path: String!, $comment: String!) {
+  createComment(id: $id, title: $title, img_path: $img_path, comment: $comment) {
     id
     comment
   }
 }
     `;
 export const ToggleValueDocument = gql`
-    mutation toggleValue($title: String!, $id: String!, $value: Boolean!) {
-  toggleValue(title: $title, id: $id, value: $value) {
-    title
-    value
+    mutation toggleValue($title: String!, $toggleKey: String!, $img_path: String!, $id: String!, $toggleValue: Boolean!) {
+  toggleValue(
+    title: $title
+    id: $id
+    img_path: $img_path
+    toggleValue: $toggleValue
+    toggleKey: $toggleKey
+  ) {
     id
+    toggleKey
+    toggleValue
   }
 }
     `;

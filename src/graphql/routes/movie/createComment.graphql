@@ -1,5 +1,15 @@
-mutation createComment($id: String!, $comment: String!) {
-	createComment(id: $id, comment: $comment) {
+mutation createComment(
+	$id: String!
+	$title: String!
+	$img_path: String!
+	$comment: String!
+) {
+	createComment(
+		id: $id
+		title: $title
+		img_path: $img_path
+		comment: $comment
+	) {
 		id
 		comment
 	}

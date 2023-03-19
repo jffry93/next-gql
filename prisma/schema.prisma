@@ -59,6 +59,8 @@ model VerificationToken {
 model Movie {
   imoID     String  @id @default(uuid())
   id        Int
+  title     String
+  img_path  String
   watchlist Boolean @default(false)
   recommend Boolean @default(false)
   completed Boolean @default(false)

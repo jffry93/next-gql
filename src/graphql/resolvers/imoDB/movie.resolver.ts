@@ -10,17 +10,14 @@ export class MovieResolver {
 	// Toggle Boolean values in Movie Table
 	@Mutation(() => ToggleValue)
 	async toggleValue(
-		@Arg('title') title: string,
 		@Arg('id') id: string,
-		@Arg('value') value: boolean,
+		@Arg('title', { nullable: true }) title: string,
+		@Arg('img_path') img_path: string,
+		@Arg('toggleKey') toggleKey: string,
+		@Arg('toggleValue') toggleValue: boolean,
 		@Ctx() { req }: ContextType
-	): Promise<{
-		title: string;
-		value: boolean;
-		id: number;
-	}> {
+	): Promise<ToggleValue> {
 		const session = await getSession({ req });
-		console.log(session);
 		// will create or update record in table
 		const searchDB = await prisma.movie.findFirst({
 			where: {
@@ -38,7 +35,7 @@ export class MovieResolver {
 				},
 				data: {
 					// ... provide data here
-					[title]: !value,
+					[toggleKey]: !toggleValue,
 				},
 			});
 		} else {
@@ -46,15 +43,17 @@ export class MovieResolver {
 				data: {
 					// ... data to create a Movie
 					id: Number(id),
-					[title]: !value,
+					title,
+					img_path,
+					[toggleKey]: !toggleValue,
 					userEmail: session?.user?.email,
 				},
 			});
 		}
 		const newPost = {
-			id: Number(id),
-			title,
-			value: !value,
+			id,
+			toggleKey,
+			toggleValue: !toggleValue,
 		};
 
 		return newPost;
@@ -63,6 +62,8 @@ export class MovieResolver {
 	@Mutation(() => Comment)
 	async createComment(
 		@Arg('id') id: string,
+		@Arg('title') title: string,
+		@Arg('img_path') img_path: string,
 		@Arg('comment') comment: string,
 		@Ctx() { req }: ContextType
 	): Promise<Comment> {
@@ -79,6 +80,8 @@ export class MovieResolver {
 			create: {
 				// ... data to create a Movie
 				id: Number(id),
+				title,
+				img_path,
 				comment: comment,
 				userEmail: session?.user?.email,
 			},

@@ -1,17 +1,10 @@
 import { ObjectType, Field, ID } from 'type-graphql';
-import { ImageAttribute } from '../TMDB/schemas/TMDB';
 
 // schema of movie table in prisma
 @ObjectType()
-export class Movie {
+export class User {
 	@Field(() => ID)
 	id!: number;
-
-	@Field(() => String)
-	title!: string;
-
-	@Field(() => String)
-	img_path!: string;
 
 	@Field(() => Boolean)
 	recommend!: boolean;
@@ -35,10 +28,10 @@ export class ToggleValue {
 	id!: string;
 
 	@Field(() => String)
-	toggleKey!: string;
+	title!: string;
 
 	@Field(() => String)
-	toggleValue!: boolean;
+	value!: boolean;
 }
 
 @ObjectType()

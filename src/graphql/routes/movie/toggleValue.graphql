@@ -1,7 +1,19 @@
-mutation toggleValue($title: String!, $id: String!, $value: Boolean!) {
-	toggleValue(title: $title, id: $id, value: $value) {
-		title
-		value
+mutation toggleValue(
+	$title: String!
+	$toggleKey: String!
+	$img_path: String!
+	$id: String!
+	$toggleValue: Boolean!
+) {
+	toggleValue(
+		title: $title
+		id: $id
+		img_path: $img_path
+		toggleValue: $toggleValue
+		toggleKey: $toggleKey
+	) {
 		id
+		toggleKey
+		toggleValue
 	}
 }

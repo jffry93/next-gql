@@ -1,4 +1,4 @@
-import Comments from '@/components/comments';
+import Comments from '@/components/Comments';
 import ToggleContainer from '@/components/toggle';
 import { getSingleMovie } from '@/graphql/api';
 import { SingleTMDB } from '@/graphql/resolvers/TMDB/schemas/SingleTMDB';

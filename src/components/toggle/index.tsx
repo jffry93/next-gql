@@ -5,6 +5,8 @@ import ToggleButton from './ToggleButton';
 interface ToggleContainerProps {
 	movie: {
 		id: string;
+		title: string;
+		poster_path: string;
 		watchlist: boolean;
 		completed: boolean;
 		recommend: boolean;
@@ -13,23 +15,30 @@ interface ToggleContainerProps {
 
 const ToggleContainer = ({ movie }: ToggleContainerProps) => {
 	const { data: session } = useSession();
+	console.log(movie);
 	return (
 		<div>
 			{session?.user && (
 				<>
 					<ToggleButton
 						id={movie.id}
-						title={'watchlist'}
+						title={movie.title}
+						img_path={movie.poster_path}
+						toggleKey={'watchlist'}
 						initialValue={movie.watchlist}
 					/>
 					<ToggleButton
 						id={movie.id}
-						title={'completed'}
+						title={movie.title}
+						img_path={movie.poster_path}
+						toggleKey={'completed'}
 						initialValue={movie.completed}
 					/>
 					<ToggleButton
 						id={movie.id}
-						title={'recommend'}
+						title={movie.title}
+						img_path={movie.poster_path}
+						toggleKey={'recommend'}
 						initialValue={movie.recommend}
 					/>
 				</>

@@ -5,20 +5,23 @@ import { useMutation } from 'react-query';
 
 interface ToggleButtonProps {
 	initialValue?: boolean;
-	title: string;
+	toggleKey: string;
 	id: string;
+	title: string;
+	img_path: string;
 }
 
 const ToggleButton = ({
 	id,
 	title,
+	img_path,
+	toggleKey,
 	initialValue = false,
 }: ToggleButtonProps) => {
 	const [value, setValue] = useState(initialValue);
 
 	const handleClick = debounce(() => {
-		// console.log('click toggle button');
-		mutate({ id: id + '', title, value });
+		mutate({ id: id + '', title, img_path, toggleKey, toggleValue: value });
 	}, 250);
 
 	const { mutate } = useMutation(toggleValue, {
@@ -38,7 +41,7 @@ const ToggleButton = ({
 			className={!value ? `text-cyan-500` : `text-purple-700`}
 			onClick={handleClick}
 		>
-			{title}
+			{toggleKey}
 		</button>
 	);
 };
