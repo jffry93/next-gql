@@ -27,6 +27,13 @@ export type Comment = {
   id: Scalars['String'];
 };
 
+export type FilteredOpinionAttribute = {
+  __typename?: 'FilteredOpinionAttribute';
+  id: Scalars['String'];
+  img_path: Scalars['String'];
+  title: Scalars['String'];
+};
+
 export type GenreAttribute = {
   __typename?: 'GenreAttribute';
   id: Scalars['ID'];
@@ -66,12 +73,18 @@ export type Query = {
   __typename?: 'Query';
   getPopularMovies: Array<Tmdb>;
   getSingleMovie: SingleTmdb;
+  getUserData: UserDetails;
   searchMovies: Array<SearchMovieTmdb>;
 };
 
 
 export type QueryGetSingleMovieArgs = {
   movie_id?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryGetUserDataArgs = {
+  user_id: Scalars['String'];
 };
 
 
@@ -137,6 +150,15 @@ export type UserAttribute = {
   name?: Maybe<Scalars['String']>;
 };
 
+export type UserDetails = {
+  __typename?: 'UserDetails';
+  completed: Array<FilteredOpinionAttribute>;
+  name?: Maybe<Scalars['String']>;
+  recommend: Array<FilteredOpinionAttribute>;
+  user_image?: Maybe<Scalars['String']>;
+  watchlist: Array<FilteredOpinionAttribute>;
+};
+
 export type VoteAttribute = {
   __typename?: 'VoteAttribute';
   vote_average: Scalars['Float'];
@@ -182,6 +204,13 @@ export type ToggleValueMutationVariables = Exact<{
 
 
 export type ToggleValueMutation = { __typename?: 'Mutation', toggleValue: { __typename?: 'ToggleValue', id: string, toggleKey: string, toggleValue: string } };
+
+export type GetUserDataQueryVariables = Exact<{
+  user_id: Scalars['String'];
+}>;
+
+
+export type GetUserDataQuery = { __typename?: 'Query', getUserData: { __typename?: 'UserDetails', name?: string | null, user_image?: string | null, watchlist: Array<{ __typename?: 'FilteredOpinionAttribute', id: string, title: string, img_path: string }>, recommend: Array<{ __typename?: 'FilteredOpinionAttribute', id: string, title: string, img_path: string }>, completed: Array<{ __typename?: 'FilteredOpinionAttribute', id: string, title: string, img_path: string }> } };
 
 
 export const GetPopularMoviesDocument = gql`
@@ -275,6 +304,29 @@ export const ToggleValueDocument = gql`
   }
 }
     `;
+export const GetUserDataDocument = gql`
+    query getUserData($user_id: String!) {
+  getUserData(user_id: $user_id) {
+    name
+    user_image
+    watchlist {
+      id
+      title
+      img_path
+    }
+    recommend {
+      id
+      title
+      img_path
+    }
+    completed {
+      id
+      title
+      img_path
+    }
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 
@@ -297,6 +349,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     toggleValue(variables: ToggleValueMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ToggleValueMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<ToggleValueMutation>(ToggleValueDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'toggleValue', 'mutation');
+    },
+    getUserData(variables: GetUserDataQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetUserDataQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetUserDataQuery>(GetUserDataDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getUserData', 'query');
     }
   };
 }

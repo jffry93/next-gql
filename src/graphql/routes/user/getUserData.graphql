@@ -1,0 +1,21 @@
+query getUserData($user_id: String!) {
+	getUserData(user_id: $user_id) {
+		name
+		user_image
+		watchlist {
+			id
+			title
+			img_path
+		}
+		recommend {
+			id
+			title
+			img_path
+		}
+		completed {
+			id
+			title
+			img_path
+		}
+	}
+}

@@ -6,6 +6,7 @@ import { MovieResolver } from '@/graphql/resolvers/imoDB/movie.resolver';
 import { TMDBResolver } from '@/graphql/resolvers/TMDB/index.resolver';
 import { getSession } from 'next-auth/react';
 import { ContextFunction } from 'apollo-server-core';
+import { UserResolver } from '@/graphql/resolvers/imoDB/user.resolver';
 
 export type ContextType = {
 	req: NextApiRequest;
@@ -26,7 +27,7 @@ export const graphqlContext: ContextFunction<{
 };
 
 const schema = await buildSchema({
-	resolvers: [MovieResolver, TMDBResolver],
+	resolvers: [MovieResolver, TMDBResolver, UserResolver],
 });
 
 const server = new ApolloServer({ schema, context: graphqlContext });
