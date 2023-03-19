@@ -7,13 +7,22 @@ interface HomeProps {
 	popularMovies: TMDB[];
 }
 
-export async function getServerSideProps() {
+// export async function getServerSideProps() {
+// 	const popularMovies = await getPopularMovies();
+
+// 	return {
+// 		props: { popularMovies: popularMovies.getPopularMovies },
+// 	};
+// }
+
+export const getStaticProps = async () => {
 	const popularMovies = await getPopularMovies();
 
 	return {
 		props: { popularMovies: popularMovies.getPopularMovies },
+		revalidate: 10, // In seconds
 	};
-}
+};
 
 export default function Home({ popularMovies }: HomeProps) {
 	return (

@@ -123,6 +123,8 @@ export class TMDBResolver {
 		let imo: Movie[] = [
 			{
 				id: 1,
+				img_path: '',
+				title: '',
 				...defaultObj,
 			},
 		];
