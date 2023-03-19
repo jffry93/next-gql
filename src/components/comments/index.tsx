@@ -7,6 +7,8 @@ import Comment from './Comment';
 
 export interface CreatePostInputs {
 	id: string;
+	title: string;
+	img_path: string;
 	comment: string;
 }
 export interface CommentsProps {
@@ -17,6 +19,8 @@ export interface CommentsProps {
 const Comments = ({ movie, onCommentCreated }: CommentsProps) => {
 	const [formData, setFormData] = useState<CreatePostInputs>({
 		id: movie.id + '',
+		title: movie.title,
+		img_path: movie.poster_path || 'no img in database',
 		comment: '',
 	});
 	const { data: session } = useSession();

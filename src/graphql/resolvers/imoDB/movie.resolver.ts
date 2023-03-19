@@ -74,9 +74,8 @@ export class MovieResolver {
 				userEmail: session?.user?.email,
 			},
 		});
-		// console.log(searchDB);
 		// will create or update record in table
-		const upsert = await prisma.movie.upsert({
+		await prisma.movie.upsert({
 			create: {
 				// ... data to create a Movie
 				id: Number(id),
@@ -90,11 +89,11 @@ export class MovieResolver {
 				comment: comment,
 			},
 			where: {
-				imoID: searchDB?.imoID,
+				imoID: searchDB?.imoID || '',
 				// ... the filter for the Movie we want to update
 			},
 		});
-		console.log(upsert);
+
 		// takes inputs from formData
 		const userComment: Comment = {
 			id,
